@@ -60,6 +60,14 @@ with sync_playwright() as p:
     expect(page.locator('#tasks')).to_be_visible();expect(page.locator('#other-plugin')).to_be_visible()
     assert page.locator('#pipeline-graph-local-extension').bounding_box()['y']<100
     ok('known widgets and native permalink footer replaced compactly; navigation and unknown plugin preserved')
+    assert page.locator('.pgvx-app').evaluate("e=>getComputedStyle(e).borderTopWidth")=='0px'
+    assert page.locator('.pgvx-builds').evaluate("e=>getComputedStyle(e).backgroundColor")=='rgba(0, 0, 0, 0)'
+    assert artifacts.evaluate("e=>getComputedStyle(e).borderLeftWidth")=='1px'
+    assert page.locator('.pgvx-graph-card').evaluate("e=>getComputedStyle(e).borderTopWidth")=='0px'
+    expect(page.locator('.pgvx-graph-footer')).to_be_hidden();expect(page.locator('.pgvx-footer')).to_be_hidden()
+    assert page.locator('#side-panel').evaluate("e=>getComputedStyle(e).borderRightWidth")=='1px'
+    notice=page.locator('.pgvx-notice');title=notice.get_attribute('title');assert title and 'Hierarchy comes from' in title
+    ok('overview and graph use separators instead of nested cards; provenance is a compact tooltip')
     page.evaluate("""{
       const root=document.createElement('div');root.id='breadcrumb-popover';
       root.innerHTML='<div class="jenkins-dropdown__split-container"><div id="duplicate-actions"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/changes">Changes</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/build">Build Now</a></div></div><div id="permalink-column"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastBuild">Last build</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastSuccessfulBuild">Last successful build</a></div></div></div>';
@@ -110,12 +118,13 @@ with sync_playwright() as p:
         host=page.locator('#pipeline-graph-local-extension').bounding_box()
         for el in [tests,artifacts,page.locator('.pgvx-builds')]:
             box=el.bounding_box();assert box['x']>=host['x']-1 and box['x']+box['width']<=host['x']+host['width']+1,(width,box,host)
-    ok('cards stay within host at 1600, 1100, 800 and 600px')
+    ok('overview sections stay within host at 1600, 1100, 800 and 600px')
     page.set_viewport_size({'width':1600,'height':1100})
     page.get_by_role('button',name='Dark',exact=True).click()
     expect(page.locator('#page-body')).to_have_attribute('data-pgvx-theme','dark')
-    assert tests.evaluate("e=>getComputedStyle(e).backgroundColor")=='rgb(25, 33, 45)'
-    ok('dark theme applies to cards and scoped native navigation')
+    assert tests.evaluate("e=>getComputedStyle(e).backgroundColor")=='rgba(0, 0, 0, 0)'
+    assert page.locator('.pgvx-app').evaluate("e=>getComputedStyle(e).backgroundColor")=='rgb(25, 33, 45)'
+    ok('dark theme keeps overview sections transparent over the shared extension surface')
     page.wait_for_timeout(200)
     page.screenshot(path=str(OUT/'job-overview-dark.png'),full_page=True)
     page.get_by_role('button',name='Light',exact=True).click()
@@ -130,20 +139,23 @@ with sync_playwright() as p:
     assert 'Full project name: example-service/feature-release' in page.locator('#main-panel').inner_text()
     expect(page.locator('#duplicate-actions')).to_be_visible();expect(page.locator('#permalink-column')).to_be_visible()
     expect(page.locator('#page-body')).not_to_have_attribute('data-pgvx-compact','true')
-    ok('Original Jenkins page restores native widgets, project identity, permalinks and breadcrumb actions')
+    assert page.locator('#side-panel').evaluate("e=>getComputedStyle(e).borderRightWidth")=='0px'
+    ok('Original Jenkins page restores native widgets, project identity, permalinks, breadcrumb actions and sidebar styling')
     page.get_by_role('button',name='Graph view',exact=True).click();expect(tests).to_contain_text('4,118')
     expect(page.locator('#duplicate-actions')).to_be_hidden();expect(page.locator('.permalinks-header')).to_be_hidden();expect(page.locator('.permalinks-list')).to_be_hidden()
+    assert page.locator('#side-panel').evaluate("e=>getComputedStyle(e).borderRightWidth")=='1px'
     assert 'Full project name: example-service/feature-release' not in page.locator('#main-panel').inner_text()
     page.get_by_role('button',name='Close local graph',exact=True).click()
     expect(page.locator('#pipeline-graph-local-extension')).to_have_count(0)
     expect(page.locator('#native-artifacts')).to_be_visible();expect(page.locator('#buildHistoryPage')).to_be_visible();expect(page.locator('#duplicate-actions')).to_be_visible()
     expect(page.locator('.permalinks-header')).to_be_visible();expect(page.locator('.permalinks-list')).to_be_visible()
     assert 'Full project name: example-service/feature-release' in page.locator('#main-panel').inner_text()
+    assert page.locator('#side-panel').evaluate("e=>getComputedStyle(e).borderRightWidth")=='0px'
     ok('close restores native DOM including project identity and permalinks without deleting handlers or elements')
     page.evaluate('window.__overviewDenied=true');page.add_script_tag(content=BUNDLE)
     expect(page.locator('.pgvx-warning')).to_contain_text('Job overview unavailable')
     expect(page.locator('#native-artifacts')).to_be_visible();expect(page.locator('#trend-widget')).to_be_visible()
-    ok('overview HTTP 403 keeps native overview instead of false empty cards')
+    ok('overview HTTP 403 keeps native overview instead of false empty sections')
     assert all(r['method']=='GET' for r in page.evaluate('window.__requests'))
     assert not errors,errors
     ok('all requests GET-only; no page JavaScript errors')

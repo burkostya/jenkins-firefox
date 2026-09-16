@@ -1,7 +1,8 @@
 .pgvx-heading {min-width:0;flex:1;}
 .pgvx-heading h2 {overflow-wrap:anywhere;}
-.pgvx-overview {display:grid;grid-template-columns:minmax(170px,.8fr) minmax(220px,1.15fr) minmax(260px,1.3fr);gap:14px;padding:16px 18px;border-bottom:1px solid var(--line);}
-.pgvx-card {min-width:0;border:1px solid var(--line);border-radius:9px;padding:14px;background:var(--card-background);}
+.pgvx-overview {display:grid;grid-template-columns:minmax(170px,.8fr) minmax(220px,1.15fr) minmax(260px,1.3fr);gap:0;padding:0 4px;border-bottom:1px solid var(--line);}
+.pgvx-card {min-width:0;padding:16px 18px;background:transparent;}
+.pgvx-card + .pgvx-card {border-left:1px solid var(--line);}
 .pgvx-card header {display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .pgvx-card header>span,.pgvx-card header>a,.pgvx-card h3 small {font-size:11px;color:var(--text-color-secondary);white-space:nowrap;}
 .pgvx-card header>a {color:var(--accent);}
@@ -55,5 +56,5 @@
 .pgvx-no-report {font-size:12px;color:var(--text-color-secondary);}
 .pgvx-trend-key {font-size:10px;line-height:1.4;margin-top:5px;}
 .pgvx-overview-error {grid-column:1/-1;}
-@media (max-width:1100px){.pgvx-overview {grid-template-columns:minmax(160px,.8fr) minmax(210px,1fr);}.pgvx-tests {grid-column:1/-1;}.pgvx-tests .pgvx-test-history{margin-top:12px;}}
-@media (max-width:720px){.pgvx-overview{grid-template-columns:minmax(0,1fr);padding:12px;gap:10px;}.pgvx-tests{grid-column:auto;}.pgvx-runbar{align-items:flex-start;}.pgvx-header{padding:14px;}.pgvx-build-list{max-height:155px;}}
+@media (max-width:1100px){.pgvx-overview {grid-template-columns:minmax(160px,.8fr) minmax(210px,1fr);}.pgvx-tests {grid-column:1/-1;border-left:0!important;border-top:1px solid var(--line);}.pgvx-tests .pgvx-test-history{margin-top:12px;}}
+@media (max-width:720px){.pgvx-overview{grid-template-columns:minmax(0,1fr);padding:0;gap:0;}.pgvx-card{padding:12px;}.pgvx-card + .pgvx-card{border-left:0;border-top:1px solid var(--line);}.pgvx-tests{grid-column:auto;}.pgvx-runbar{align-items:flex-start;}.pgvx-header{padding:14px;}.pgvx-build-list{max-height:155px;}}

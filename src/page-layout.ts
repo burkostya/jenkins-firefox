@@ -10,6 +10,8 @@ export function createJobPageLayout(panel:HTMLElement,host:HTMLElement,original:
   const style=document.createElement('style');
   style.textContent=`
     #page-body[data-pgvx-compact="true"] #main-panel { min-width:0; }
+    #page-body[data-pgvx-compact="true"] #side-panel { border-right:1px solid #e0e5eb; padding-right:12px; }
+    #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #side-panel { border-right-color:#354053; }
     #page-body[data-pgvx-compact="true"] #tasks .task-link { min-height:30px; padding-top:5px; padding-bottom:5px; }
     #page-body[data-pgvx-compact="true"] #tasks .task { margin-bottom:2px; }
     #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #tasks { background:#19212d;color:#dce4ef;border-radius:8px;padding:6px; }
