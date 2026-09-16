@@ -14,6 +14,9 @@ export function createJobPageLayout(panel:HTMLElement,host:HTMLElement,original:
     #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #tasks { background:#19212d;color:#dce4ef;border-radius:8px;padding:6px; }
     #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #tasks .task-link { color:#dce4ef; }
     #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #tasks .task-link--active { background:#354053; }
+    body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild/"]) { grid-template-columns:auto; }
+    body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild/"]) > :first-child { display:none !important; }
+    body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild/"]) > :last-child { border-left:0; background:transparent; }
   `;
   function hide(el:HTMLElement){
     if(el===host||el===original||el.contains(host))return;
