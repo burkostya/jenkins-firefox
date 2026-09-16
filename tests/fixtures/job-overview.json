@@ -1,0 +1,13 @@
+{
+  "_class":"org.jenkinsci.plugins.workflow.job.WorkflowJob",
+  "fullName":"example-service/feature-release",
+  "name":"feature-release",
+  "lastBuild":{"number":4},
+  "lastSuccessfulBuild":{"number":4},
+  "builds":[
+    {"number":4,"result":"SUCCESS","building":false,"timestamp":1789538965442,"duration":2199304,"artifacts":[{"fileName":"openapi.tar.gz","relativePath":"openapi.tar.gz"},{"fileName":"govulncheck-output.json","relativePath":"tmp/govulncheck-output.json"}],"actions":[{"_class":"hudson.model.CauseAction"},{},{"_class":"hudson.tasks.junit.TestResultAction","failCount":0,"skipCount":13,"totalCount":4118}]},
+    {"number":3,"result":"FAILURE","building":false,"timestamp":1789536955386,"duration":161347,"artifacts":[],"actions":[{}, {"_class":"hudson.model.CauseAction"}]},
+    {"number":2,"result":"NOT_BUILT","building":false,"timestamp":1789535865349,"duration":1094205,"artifacts":[{"fileName":"govulncheck-output.json","relativePath":"tmp/govulncheck-output.json"}],"actions":[{"_class":"jenkins.model.InterruptedBuildAction"},{}]},
+    {"number":1,"result":"NOT_BUILT","building":false,"timestamp":1789535855348,"duration":10472,"artifacts":[],"actions":[{}, {"_class":"jenkins.model.InterruptedBuildAction"}]}
+  ]
+}

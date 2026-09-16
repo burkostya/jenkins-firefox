@@ -1,6 +1,6 @@
 {
   "name": "pipeline-graph-local-firefox",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Jenkins graph from server tree or Pipeline Steps HTML; read-only wfapi fallback. Based on Pipeline Graph View 1013.v9f83fd83c063.",
   "license": "MIT",
@@ -9,9 +9,10 @@
   },
   "scripts": {
     "build": "node build.cjs",
-    "test": "node --test tests/model.test.cjs tests/security.test.cjs tests/flow-table.test.cjs",
+    "test": "node --test tests/model.test.cjs tests/security.test.cjs tests/flow-table.test.cjs tests/overview.test.cjs",
     "test:browser": "python tests/browser_test.py",
     "preview": "python tools/preview.py",
-    "test:flow-browser": "python tests/flow_browser_test.py"
+    "test:flow-browser": "python tests/flow_browser_test.py",
+    "test:overview-browser": "python tests/overview_browser_test.py"
   }
 }

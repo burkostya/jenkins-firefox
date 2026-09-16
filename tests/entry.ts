@@ -6,3 +6,4 @@ export {defaultLayout,Result} from '../upstream/pipeline-graph-view/pipeline-gra
 export {Messages} from '../src/compat/i18n.tsx';
 
 export * from '../src/flow-table.ts';
+export * from '../src/overview.ts';
