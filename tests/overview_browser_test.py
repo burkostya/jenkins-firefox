@@ -49,6 +49,13 @@ with sync_playwright() as p:
     expect(page.locator('#tasks')).to_be_visible();expect(page.locator('#other-plugin')).to_be_visible()
     assert page.locator('#pipeline-graph-local-extension').bounding_box()['y']<100
     ok('known widgets replaced compactly; navigation and unknown plugin preserved')
+    page.evaluate("""{
+      const root=document.createElement('div');root.id='breadcrumb-popover';
+      root.innerHTML='<div class="jenkins-dropdown__split-container"><div id="duplicate-actions"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/changes">Changes</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/build">Build Now</a></div></div><div id="permalink-column"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastBuild/">Last build</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastSuccessfulBuild/">Last successful build</a></div></div></div>';
+      document.body.append(root);
+    }""")
+    expect(page.locator('#duplicate-actions')).to_be_hidden();expect(page.locator('#permalink-column')).to_be_visible()
+    ok('job breadcrumb dropdown hides duplicated actions but keeps permalink navigation')
     page.get_by_role('button',name='Select build #3',exact=True).click()
     expect(tests).to_contain_text('No JUnit report published');expect(artifacts).to_contain_text('No archived artifacts for #3')
     expect(page.locator('.pgvx-run-summary')).to_contain_text('FAILURE')
@@ -101,12 +108,14 @@ with sync_playwright() as p:
     page.get_by_role('button',name='Original Jenkins page',exact=True).click()
     for selector in ['#trend-widget','#native-artifacts','#native-tests','#buildHistoryPage','.jenkins-app-bar','.cbwf-stage-view','#late-trend']:
         expect(page.locator(selector)).to_be_visible()
+    expect(page.locator('#duplicate-actions')).to_be_visible();expect(page.locator('#permalink-column')).to_be_visible()
     expect(page.locator('#page-body')).not_to_have_attribute('data-pgvx-compact','true')
-    ok('Original Jenkins page restores late and initial widgets')
+    ok('Original Jenkins page restores late and initial widgets plus breadcrumb actions')
     page.get_by_role('button',name='Graph view',exact=True).click();expect(tests).to_contain_text('4,118')
+    expect(page.locator('#duplicate-actions')).to_be_hidden()
     page.get_by_role('button',name='Close local graph',exact=True).click()
     expect(page.locator('#pipeline-graph-local-extension')).to_have_count(0)
-    expect(page.locator('#native-artifacts')).to_be_visible();expect(page.locator('#buildHistoryPage')).to_be_visible()
+    expect(page.locator('#native-artifacts')).to_be_visible();expect(page.locator('#buildHistoryPage')).to_be_visible();expect(page.locator('#duplicate-actions')).to_be_visible()
     ok('close restores native DOM without deleting handlers or elements')
     page.evaluate('window.__overviewDenied=true');page.add_script_tag(content=BUNDLE)
     expect(page.locator('.pgvx-warning')).to_contain_text('Job overview unavailable')
