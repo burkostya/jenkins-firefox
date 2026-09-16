@@ -82,10 +82,10 @@ fs.rmSync(path.join(ROOT,'extension'),{recursive:true,force:true});
 fs.mkdirSync(path.join(ROOT,'extension'),{recursive:true});
 const result=bundle('src/content.tsx',path.join(ROOT,'extension/content.js'));
 for(const file of ['manifest.json','icon.svg','README.md','NOTICE.md','LICENSE'])fs.copyFileSync(path.join(ROOT,file),path.join(ROOT,'extension',file));
-fs.copyFileSync(path.join(ROOT,'src/background.js'),path.join(ROOT,'extension/background.js'));
+for(const file of ['activation.js','background.js','popup.html','popup.css','popup.js'])fs.copyFileSync(path.join(ROOT,'src',file),path.join(ROOT,'extension',file));
 fs.cpSync(path.join(ROOT,'licenses'),path.join(ROOT,'extension/LICENSES'),{recursive:true});
 // Build pure adapter / layout modules for Node tests, with the same compiler and patches.
 bundle('tests/entry.ts',path.join(ROOT,'tests/lib.cjs'),true);
-bundle('tests/browser-entry.tsx',path.join(ROOT,'tests/browser-bundle.js')); 
+bundle('tests/browser-entry.tsx',path.join(ROOT,'tests/browser-bundle.js'));
 fs.writeFileSync(path.join(ROOT,'BUILD-REPORT.json'),JSON.stringify({upstreamTag:manifest.tag,typescript:ts.version,react:'18.2.0',bundle:result,patches:applied.filter((p,i,arr)=>arr.findIndex(q=>q.file===p.file&&q.reason===p.reason)===i),note:'TypeScript syntax transpilation, not full semantic type checking.'},null,2)+'\n');
 console.log('Built extension/content.js: '+result.bytes+' bytes, '+result.modules+' modules.');
