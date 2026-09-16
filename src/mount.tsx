@@ -35,7 +35,8 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   function decorateProvenance(){
     const notice=target.querySelector<HTMLElement>('.pgvx-notice');if(!notice)return;
     const text=notice.textContent?.replace(/\s+/g,' ').trim()||'';
-    if(text&&notice.dataset.pgvxTooltipText!==text){notice.title=text;notice.setAttribute('aria-label',text);notice.dataset.pgvxTooltipText=text;}
+    const tooltip=text?'Hierarchy comes from the selected build when available. '+text:'';
+    if(tooltip&&notice.dataset.pgvxTooltipText!==tooltip){notice.title=tooltip;notice.setAttribute('aria-label',tooltip);notice.dataset.pgvxTooltipText=tooltip;}
   }
   const provenanceObserver=new MutationObserver(decorateProvenance);provenanceObserver.observe(target,{childList:true,subtree:true,characterData:true});
   let closed=false;const root=createRoot(target);
