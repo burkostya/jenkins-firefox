@@ -34,7 +34,8 @@ test('Run once injects only into an explicitly supplied Jenkins job tab',async()
   await env.listeners.message({type:'pgvx-inject',tabId:42,url:'https://jenkins.test/job/x/'});
   const call=env.calls.find(item=>item[0]==='inject')[1];
   assert.equal(call.target.tabId,42);
-  assert.deepEqual(call.files,['content.js']);
+  assert.equal(call.files.length,1);
+  assert.equal(call.files[0],'content.js');
 });
 
 test('Run once rejects non-job URLs',async()=>{
