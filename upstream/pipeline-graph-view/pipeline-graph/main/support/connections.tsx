@@ -1,0 +1,602 @@
+import { Component, SVGAttributes } from "react";
+
+import {
+  CompositeConnection,
+  ConnectionEdge,
+  LayoutInfo,
+} from "../PipelineGraphModel.tsx";
+import { nodeStrokeWidth } from "../support/StatusIcons.tsx";
+
+type SVGChildren = Array<any>; // Fixme: Maybe refine this? Not sure what should go here, we have working code I can't make typecheck
+
+// Generate a react key for a connection
+function connectorKey(leftNode: ConnectionEdge, rightNode: ConnectionEdge) {
+  return `c_${leftNode.key}_${leftNode.x}_${leftNode.y}_to_${rightNode.key}_${rightNode.x}_${rightNode.y}`;
+}
+
+interface Props {
+  connections: Array<CompositeConnection>;
+  layout: LayoutInfo;
+}
+
+export class GraphConnections extends Component {
+  declare props: Props;
+
+  getConnectorStroke(isSkipped?: boolean): SVGAttributes<any> {
+    return {
+      className: isSkipped
+        ? "PWGx-pipeline-connector-skipped"
+        : "PWGx-pipeline-connector",
+      strokeWidth: this.props.layout.connectorStrokeWidth,
+    };
+  }
+
+  /**
+   * Generate SVG for a composite connection, which may be to/from many nodes.
+   *
+   * Farms work out to other methods on self depending on the complexity of the line required. Adds all the SVG
+   * components to the elements list.
+   */
+  private renderCompositeConnection(
+    connection: CompositeConnection,
+    svgElements: SVGChildren,
+  ) {
+    const { sourceNodes, destinationNodes, skippedNodes, hasBranchLabels } =
+      connection;
+
+    if (sourceNodes.length === 1 && sourceNodes[0].allChildrenSkipped) {
+      this.renderAllChildrenSkippedConnection(sourceNodes[0], svgElements);
+    } else if (skippedNodes.length === 0) {
+      // Nothing too complicated, use the original connection drawing code
+      this.renderBasicConnections(
+        sourceNodes,
+        destinationNodes,
+        svgElements,
+        hasBranchLabels,
+      );
+    } else {
+      this.renderSkippingConnections(
+        sourceNodes,
+        destinationNodes,
+        skippedNodes,
+        svgElements,
+        hasBranchLabels,
+      );
+    }
+  }
+
+  /**
+   * Connections between adjacent columns without any skipping.
+   *
+   * Adds all the SVG components to the elements list.
+   */
+  private renderBasicConnections(
+    sourceNodes: Array<ConnectionEdge>,
+    destinationNodes: Array<ConnectionEdge>,
+    svgElements: SVGChildren,
+    hasBranchLabels: boolean,
+  ) {
+    const { curveRadius, nodeSpacingH } = this.props.layout;
+    const halfSpacingH = nodeSpacingH / 2;
+
+    if (sourceNodes.length === 1 && destinationNodes.length === 1) {
+      this.renderHorizontalConnection(
+        sourceNodes[0],
+        destinationNodes[0],
+        svgElements,
+        sourceNodes[0].isSkipped || destinationNodes[0].isSkipped,
+      );
+      return; // No curves needed.
+    }
+
+    // Work out the extents of source and dest space
+    let rightmostSource = sourceNodes[0].x;
+    let leftmostDestination = destinationNodes[0].x;
+
+    for (let i = 1; i < sourceNodes.length; i++) {
+      rightmostSource = Math.max(rightmostSource, sourceNodes[i].x);
+    }
+
+    for (let i = 1; i < destinationNodes.length; i++) {
+      leftmostDestination = Math.min(
+        leftmostDestination,
+        destinationNodes[i].x,
+      );
+    }
+
+    // Collapse from previous node(s) to top column node
+    const collapseMidPointX = Math.round(rightmostSource + halfSpacingH);
+
+    if (sourceNodes[0].isSkipped === destinationNodes[0].isSkipped) {
+      this.renderHorizontalConnection(
+        sourceNodes[0],
+        destinationNodes[0],
+        svgElements,
+      );
+    } else {
+      // Connect up to the point where the curved connection touches the base.
+      this.renderHorizontalConnection(
+        sourceNodes[0],
+        { ...destinationNodes[0], x: collapseMidPointX + curveRadius },
+        svgElements,
+        sourceNodes[0].isSkipped,
+      );
+      this.renderHorizontalConnection(
+        { ...sourceNodes[0], x: collapseMidPointX - curveRadius },
+        destinationNodes[0],
+        svgElements,
+        destinationNodes[0].isSkipped,
+      );
+    }
+
+    for (const previousNode of sourceNodes.slice(1)) {
+      this.renderBasicCurvedConnection(
+        previousNode,
+        destinationNodes[0],
+        collapseMidPointX,
+        svgElements,
+        sourceNodes.length > 1
+          ? previousNode.isSkipped
+          : destinationNodes[0].isSkipped,
+      );
+    }
+
+    // Expand from top previous node to column node(s)
+    let expandMidPointX = Math.round(leftmostDestination - halfSpacingH);
+
+    if (hasBranchLabels) {
+      // Shift curve midpoint so that there's room for the labels
+      expandMidPointX -= nodeSpacingH;
+    }
+
+    for (const destNode of destinationNodes.slice(1)) {
+      this.renderBasicCurvedConnection(
+        sourceNodes[0],
+        destNode,
+        expandMidPointX,
+        svgElements,
+        destinationNodes.length > 1
+          ? destNode.isSkipped
+          : sourceNodes[0].isSkipped,
+      );
+    }
+  }
+
+  getNodeRadius(node: ConnectionEdge, edge: "left" | "right") {
+    const { nodeRadius, terminalRadius, nodeSpacingH } = this.props.layout;
+    if (node.isPlaceholder) {
+      if (node.isHidden) return 0;
+      return terminalRadius;
+    }
+    if (node.firstChildIsSkipped) {
+      // Turn half of the regular connecting line into a skipped line.
+      if (edge === "right") return nodeSpacingH / 2;
+      if (edge === "left") return -nodeSpacingH / 2;
+    }
+    if (node.isHidden) return 0;
+    return nodeRadius;
+  }
+
+  /**
+   * Renders a more complex connection, that "skips" one or more nodes
+   *
+   * Adds all the SVG components to the elements list.
+   */
+  private renderSkippingConnections(
+    sourceNodes: Array<ConnectionEdge>,
+    destinationNodes: Array<ConnectionEdge>,
+    skippedNodes: Array<ConnectionEdge>,
+    svgElements: SVGChildren,
+    hasBranchLabels: boolean,
+  ) {
+    const { curveRadius, nodeSpacingV, nodeSpacingH } = this.props.layout;
+
+    const halfSpacingH = nodeSpacingH / 2;
+
+    const lastSkippedNode = skippedNodes[skippedNodes.length - 1];
+    let leftNode, rightNode;
+
+    //--------------------------------------------------------------------------
+    //  Draw the "ghost" connections between skipped nodes
+
+    leftNode = skippedNodes[0];
+    for (rightNode of skippedNodes.slice(1)) {
+      this.renderHorizontalConnection(leftNode, rightNode, svgElements, true);
+      leftNode = rightNode;
+    }
+
+    //--------------------------------------------------------------------------
+    //  Work out the extents of source and dest space
+
+    let rightmostSource = sourceNodes[0].x;
+    let leftmostDestination = destinationNodes[0].x;
+
+    for (let i = 1; i < sourceNodes.length; i++) {
+      rightmostSource = Math.max(rightmostSource, sourceNodes[i].x);
+    }
+
+    for (let i = 1; i < destinationNodes.length; i++) {
+      leftmostDestination = Math.min(
+        leftmostDestination,
+        destinationNodes[i].x,
+      );
+    }
+
+    //--------------------------------------------------------------------------
+    //  "Collapse" from the source node(s) down toward the first skipped
+
+    leftNode = sourceNodes[0];
+    rightNode = skippedNodes[0];
+
+    for (leftNode of sourceNodes.slice(1)) {
+      const midPointX = Math.round(rightmostSource + halfSpacingH);
+      const leftNodeRadius = this.getNodeRadius(leftNode, "left");
+      const key = connectorKey(leftNode, rightNode);
+
+      const x1 = leftNode.x + leftNodeRadius - nodeStrokeWidth / 2;
+      const y1 = leftNode.y;
+      const x2 = midPointX;
+      const y2 = rightNode.y;
+
+      const pathData =
+        `M ${x1} ${y1}` +
+        this.svgBranchCurve(x1, y1, x2, y2, midPointX, curveRadius);
+
+      svgElements.push(
+        <path
+          {...this.getConnectorStroke(leftNode.isSkipped)}
+          key={key}
+          d={pathData}
+          fill="none"
+        />,
+      );
+    }
+
+    //--------------------------------------------------------------------------
+    //  "Expand" from the last skipped node toward the destination nodes
+
+    leftNode = lastSkippedNode;
+
+    let expandMidPointX = Math.round(leftmostDestination - halfSpacingH);
+
+    if (hasBranchLabels) {
+      // Shift curve midpoint so that there's room for the labels
+      expandMidPointX -= nodeSpacingH;
+    }
+
+    for (rightNode of destinationNodes.slice(1)) {
+      const rightNodeRadius = this.getNodeRadius(rightNode, "right");
+      const key = connectorKey(leftNode, rightNode);
+
+      const x1 = expandMidPointX;
+      const y1 = leftNode.y;
+      const x2 = rightNode.x - rightNodeRadius + nodeStrokeWidth / 2;
+      const y2 = rightNode.y;
+
+      const pathData =
+        `M ${x1} ${y1}` +
+        this.svgBranchCurve(x1, y1, x2, y2, expandMidPointX, curveRadius);
+
+      svgElements.push(
+        <path
+          {...this.getConnectorStroke(rightNode.isSkipped)}
+          key={key}
+          d={pathData}
+          fill="none"
+        />,
+      );
+    }
+
+    //--------------------------------------------------------------------------
+    //  "Main" curve from top of source nodes, around skipped nodes, to top of dest nodes
+
+    leftNode = sourceNodes[0];
+    rightNode = destinationNodes[0];
+
+    const leftNodeRadius = this.getNodeRadius(leftNode, "left");
+    const rightNodeRadius = this.getNodeRadius(rightNode, "right");
+    const key = connectorKey(leftNode, rightNode);
+
+    const skipHeight = nodeSpacingV * 0.5;
+    const controlOffsetUpper = curveRadius * 1.54;
+    const controlOffsetLower = skipHeight * 0.257;
+    const controlOffsetMid = skipHeight * 0.2;
+    const inflectiontOffset = Math.round(skipHeight * 0.7071); // cos(45º)-ish
+
+    // Start point
+    const p1x = leftNode.x + leftNodeRadius - nodeStrokeWidth / 2;
+    const p1y = leftNode.y;
+
+    // Begin curve down point
+    const p2x = Math.round(skippedNodes[0].x - halfSpacingH);
+    const p2y = p1y;
+    const c1x = p2x + controlOffsetUpper;
+    const c1y = p2y;
+
+    // End curve down point
+    const p4x = skippedNodes[0].x;
+    const p4y = p1y + skipHeight;
+    const c4x = p4x - controlOffsetLower;
+    const c4y = p4y;
+
+    // Curve down midpoint / inflection
+    const p3x = skippedNodes[0].x - inflectiontOffset;
+    const p3y = skippedNodes[0].y + inflectiontOffset;
+    const c2x = p3x - controlOffsetMid;
+    const c2y = p3y - controlOffsetMid;
+    const c3x = p3x + controlOffsetMid;
+    const c3y = p3y + controlOffsetMid;
+
+    // Begin curve up point
+    const p5x = lastSkippedNode.x;
+    const p5y = p4y;
+    const c5x = p5x + controlOffsetLower;
+    const c5y = p5y;
+
+    // End curve up point
+    const p7x = Math.round(lastSkippedNode.x + halfSpacingH);
+    const p7y = rightNode.y;
+    const c8x = p7x - controlOffsetUpper;
+    const c8y = p7y;
+
+    // Curve up midpoint / inflection
+    const p6x = lastSkippedNode.x + inflectiontOffset;
+    const p6y = lastSkippedNode.y + inflectiontOffset;
+    const c6x = p6x - controlOffsetMid;
+    const c6y = p6y + controlOffsetMid;
+    const c7x = p6x + controlOffsetMid;
+    const c7y = p6y - controlOffsetMid;
+
+    // End point
+    const p8x = rightNode.x - rightNodeRadius + nodeStrokeWidth / 2;
+    const p8y = rightNode.y;
+
+    // Source side half of the 1st horizontal
+    svgElements.push(
+      <line
+        {...this.getConnectorStroke(leftNode.isSkipped)}
+        key={key + "_source"}
+        x1={p1x}
+        y1={p1y}
+        x2={p2x}
+        y2={p2y}
+        fill="none"
+      />,
+    );
+    // Skipped side half of the 1st horizontal
+    svgElements.push(
+      <line
+        {...this.getConnectorStroke(skippedNodes[0].isSkipped)}
+        key={key + "_skipped_left"}
+        x1={p2x}
+        y1={p2y}
+        x2={skippedNodes[0].x}
+        y2={skippedNodes[0].y}
+        fill="none"
+      />,
+    );
+
+    const pathData =
+      `M ${p2x} ${p2y}` +
+      `C ${c1x} ${c1y} ${c2x} ${c2y} ${p3x} ${p3y}` + // Curve down (upper)
+      `C ${c3x} ${c3y} ${c4x} ${c4y} ${p4x} ${p4y}` + // Curve down (lower)
+      `L ${p5x} ${p5y}` + // 2nd horizontal
+      `C ${c5x} ${c5y} ${c6x} ${c6y} ${p6x} ${p6y}` + // Curve up (lower)
+      `C ${c7x} ${c7y} ${c8x} ${c8y} ${p7x} ${p7y}` + // Curve up (upper)
+      "";
+
+    // Skipped curve
+    svgElements.push(
+      <path
+        {...this.getConnectorStroke(false)}
+        key={key + "_skipped_curve"}
+        d={pathData}
+        fill="none"
+      />,
+    );
+
+    // Skipped side of the last horizontal
+    svgElements.push(
+      <line
+        {...this.getConnectorStroke(lastSkippedNode.isSkipped)}
+        key={key + "_skipped_right"}
+        x1={lastSkippedNode.x}
+        y1={lastSkippedNode.y}
+        x2={p7x}
+        y2={p7y}
+        fill="none"
+      />,
+    );
+
+    // Destination side of the last horizontal
+    svgElements.push(
+      <line
+        {...this.getConnectorStroke(rightNode.isSkipped)}
+        key={key + "_destination"}
+        x1={p7x}
+        y1={p7y}
+        x2={p8x}
+        y2={p8y}
+        fill="none"
+      />,
+    );
+  }
+
+  /**
+   * Simple straight connection.
+   *
+   * Adds all the SVG components to the elements list.
+   */
+  private renderHorizontalConnection(
+    leftNode: ConnectionEdge,
+    rightNode: ConnectionEdge,
+    svgElements: SVGChildren,
+    skipped = false,
+  ) {
+    const leftNodeRadius = this.getNodeRadius(leftNode, "left");
+    const rightNodeRadius = this.getNodeRadius(rightNode, "right");
+
+    const key = connectorKey(leftNode, rightNode);
+
+    const x1 = leftNode.x + leftNodeRadius - nodeStrokeWidth / 2;
+    const x2 = rightNode.x - rightNodeRadius + nodeStrokeWidth / 2;
+    const y = leftNode.y;
+
+    svgElements.push(
+      <line
+        {...this.getConnectorStroke(skipped)}
+        key={key}
+        x1={x1}
+        y1={y}
+        x2={x2}
+        y2={y}
+      />,
+    );
+  }
+
+  /**
+   * A direct curve between two nodes in adjacent columns.
+   *
+   * Adds all the SVG components to the elements list.
+   */
+  private renderBasicCurvedConnection(
+    leftNode: ConnectionEdge,
+    rightNode: ConnectionEdge,
+    midPointX: number,
+    svgElements: SVGChildren,
+    skipped = false,
+    curveRadius?: number,
+  ) {
+    curveRadius = curveRadius ?? this.props.layout.curveRadius;
+    const leftNodeRadius = this.getNodeRadius(leftNode, "left");
+    const rightNodeRadius = this.getNodeRadius(rightNode, "right");
+
+    const key = connectorKey(leftNode, rightNode);
+
+    const leftPos = {
+      x: leftNode.x + leftNodeRadius - nodeStrokeWidth / 2,
+      y: leftNode.y,
+    };
+
+    const rightPos = {
+      x: rightNode.x - rightNodeRadius + nodeStrokeWidth / 2,
+      y: rightNode.y,
+    };
+
+    const pathData =
+      `M ${leftPos.x} ${leftPos.y}` +
+      this.svgBranchCurve(
+        leftPos.x,
+        leftPos.y,
+        rightPos.x,
+        rightPos.y,
+        midPointX,
+        curveRadius,
+      );
+
+    svgElements.push(
+      <path
+        {...this.getConnectorStroke(skipped)}
+        key={key}
+        d={pathData}
+        fill="none"
+      />,
+    );
+  }
+
+  /**
+   * Enclose all the parallel skipped connections, using the same horizontal start/end points and a smaller curve radius.
+   */
+  private renderAllChildrenSkippedConnection(
+    node: ConnectionEdge,
+    svgElements: SVGChildren,
+  ) {
+    const { nodeSpacingH, nodeSpacingV, curveRadius } = this.props.layout;
+    const smallerCurveRadius = curveRadius - nodeStrokeWidth;
+
+    const leftTop: ConnectionEdge = {
+      x: node.x - nodeSpacingH,
+      y: node.y,
+      key: `skipped_left_top_${node.key}`,
+      isPlaceholder: true,
+      isHidden: true,
+    };
+    const leftBottom: ConnectionEdge = {
+      x: node.x,
+      y: node.y + node.height! - nodeSpacingV / 2,
+      key: `skipped_left_bottom_${node.key}`,
+      isPlaceholder: true,
+      isHidden: true,
+    };
+    const rightBottom: ConnectionEdge = {
+      x: node.x,
+      y: node.y + node.height! - nodeSpacingV / 2,
+      key: `skipped_right_bottom_${node.key}`,
+      isPlaceholder: true,
+      isHidden: true,
+    };
+    const rightTop: ConnectionEdge = {
+      x: node.x + node.width!,
+      y: node.y,
+      key: `skipped_right_top_${node.key}`,
+      isPlaceholder: true,
+      isHidden: true,
+    };
+    const leftMidX = leftTop.x + nodeSpacingH / 2;
+    const rightMidX = rightTop.x - nodeSpacingH / 2;
+    this.renderBasicCurvedConnection(
+      leftTop,
+      leftBottom,
+      leftMidX,
+      svgElements,
+      false,
+      smallerCurveRadius,
+    );
+    this.renderBasicCurvedConnection(
+      rightBottom,
+      rightTop,
+      rightMidX,
+      svgElements,
+      false,
+      smallerCurveRadius,
+    );
+  }
+
+  /**
+   * Generates an SVG path string for the "vertical" S curve used to connect nodes in adjacent columns.
+   */
+  private svgBranchCurve(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    midPointX: number,
+    curveRadius: number,
+  ) {
+    const verticalDirection = Math.sign(y2 - y1); // 1 == curve down, -1 == curve up
+    const w1 = midPointX - curveRadius - x1 + curveRadius * verticalDirection;
+    const w2 = x2 - curveRadius - midPointX - curveRadius * verticalDirection;
+    const v = y2 - y1 - 2 * curveRadius * verticalDirection; // Will be -ive if curve up
+    const cv = verticalDirection * curveRadius;
+
+    return (
+      (y1 > y2 ? ` l ${w1} 0` : ` m ${w1} 0`) + // first horizontal line
+      ` c ${curveRadius} 0 ${curveRadius} ${cv} ${curveRadius} ${cv}` + // turn
+      ` l 0 ${v}` + // vertical line
+      ` c 0 ${cv} ${curveRadius} ${cv} ${curveRadius} ${cv}` + // turn again
+      (y1 < y2 ? ` l ${w2} 0` : "") // second horizontal line
+    );
+  }
+
+  render() {
+    const { connections } = this.props;
+
+    const svgElements: SVGChildren = []; // Buffer for children of the SVG
+
+    connections.forEach((connection) => {
+      this.renderCompositeConnection(connection, svgElements);
+    });
+
+    return <>{svgElements}</>;
+  }
+}

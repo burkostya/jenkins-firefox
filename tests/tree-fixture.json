@@ -1,0 +1,259 @@
+{
+  "status": "ok",
+  "data": {
+    "complete": true,
+    "stages": [
+      {
+        "id": "1000",
+        "name": "Prepare",
+        "title": "Prepare",
+        "state": "success",
+        "type": "STAGE",
+        "children": [
+          {
+            "id": "8",
+            "name": "Declarative: Checkout SCM",
+            "title": "Declarative: Checkout SCM",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788979539204,
+            "totalDurationMillis": 37136,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "19",
+            "name": "Deps",
+            "title": "Deps",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788979576456,
+            "totalDurationMillis": 64365,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "34",
+            "name": "AI assistance",
+            "title": "AI assistance",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788979640845,
+            "totalDurationMillis": 34087,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          }
+        ],
+        "startTimeMillis": 1788979539204,
+        "totalDurationMillis": 135728,
+        "pauseDurationMillis": 0,
+        "agent": "",
+        "isSequential": true
+      },
+      {
+        "id": "1001",
+        "name": "API",
+        "title": "API",
+        "state": "success",
+        "type": "STAGE",
+        "children": [
+          {
+            "id": "52",
+            "name": "Agent flow",
+            "title": "Agent flow",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788979674959,
+            "totalDurationMillis": 268764,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "57",
+            "name": "OpenAPI Spec",
+            "title": "OpenAPI Spec",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788979943751,
+            "totalDurationMillis": 58346,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "62",
+            "name": "OpenAPI on master",
+            "title": "OpenAPI on master",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788980002124,
+            "totalDurationMillis": 15996,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "70",
+            "name": "OpenAPI diff",
+            "title": "OpenAPI diff",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788980018148,
+            "totalDurationMillis": 13651,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          }
+        ],
+        "startTimeMillis": 1788979674959,
+        "totalDurationMillis": 356840,
+        "pauseDurationMillis": 0,
+        "agent": "",
+        "isSequential": true
+      },
+      {
+        "id": "76",
+        "name": "Build",
+        "title": "Build",
+        "state": "success",
+        "type": "STAGE",
+        "children": [],
+        "startTimeMillis": 1788980031824,
+        "totalDurationMillis": 73786,
+        "pauseDurationMillis": 0,
+        "agent": "",
+        "isSequential": false
+      },
+      {
+        "id": "81",
+        "name": "Test",
+        "title": "Test",
+        "state": "failure",
+        "type": "STAGE",
+        "children": [
+          {
+            "id": "93",
+            "name": "Tests",
+            "title": "Tests",
+            "state": "failure",
+            "type": "PARALLEL",
+            "children": [],
+            "startTimeMillis": 1788980105783,
+            "totalDurationMillis": 662685,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "95",
+            "name": "Lint",
+            "title": "Lint",
+            "state": "failure",
+            "type": "PARALLEL",
+            "children": [],
+            "startTimeMillis": 1788980105804,
+            "totalDurationMillis": 215489,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "97",
+            "name": "Vulnerability",
+            "title": "Vulnerability",
+            "state": "failure",
+            "type": "PARALLEL",
+            "children": [],
+            "startTimeMillis": 1788980105824,
+            "totalDurationMillis": 160352,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "99",
+            "name": "Validate Migration Inventory",
+            "title": "Validate Migration Inventory",
+            "state": "failure",
+            "type": "PARALLEL",
+            "children": [],
+            "startTimeMillis": 1788980105844,
+            "totalDurationMillis": 9014,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "101",
+            "name": "Lint Migrations",
+            "title": "Lint Migrations",
+            "state": "failure",
+            "type": "PARALLEL",
+            "children": [],
+            "startTimeMillis": 1788980105863,
+            "totalDurationMillis": 14349,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          }
+        ],
+        "startTimeMillis": 1788980105783,
+        "totalDurationMillis": 662685,
+        "pauseDurationMillis": 0,
+        "agent": "",
+        "isSequential": false
+      },
+      {
+        "id": "1002",
+        "name": "Publish",
+        "title": "Publish",
+        "state": "success",
+        "type": "STAGE",
+        "children": [
+          {
+            "id": "174",
+            "name": "Container image",
+            "title": "Container image",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788980768637,
+            "totalDurationMillis": 63472,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          },
+          {
+            "id": "191",
+            "name": "Upload artifact",
+            "title": "Upload artifact",
+            "state": "success",
+            "type": "STAGE",
+            "children": [],
+            "startTimeMillis": 1788980832136,
+            "totalDurationMillis": 89285,
+            "pauseDurationMillis": 0,
+            "agent": "",
+            "isSequential": false
+          }
+        ],
+        "startTimeMillis": 1788980768637,
+        "totalDurationMillis": 152784,
+        "pauseDurationMillis": 0,
+        "agent": "",
+        "isSequential": true
+      }
+    ]
+  }
+}

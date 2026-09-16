@@ -1,0 +1,1381 @@
+[
+  {
+    "_links": {
+      "self": {
+        "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/wfapi/describe"
+      },
+      "artifacts": {
+        "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/wfapi/artifacts"
+      }
+    },
+    "id": "2",
+    "name": "#2",
+    "status": "SUCCESS",
+    "startTimeMillis": 1788979528225,
+    "endTimeMillis": 1788980921645,
+    "durationMillis": 1393420,
+    "queueDurationMillis": 8,
+    "pauseDurationMillis": 0,
+    "stages": [
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/8/wfapi/describe"
+          }
+        },
+        "id": "8",
+        "name": "Declarative: Checkout SCM",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788979539204,
+        "durationMillis": 37136,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/9/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/9/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/9/log"
+              }
+            },
+            "id": "9",
+            "name": "Check out from version control",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979539293,
+            "durationMillis": 37023,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "8"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/19/wfapi/describe"
+          }
+        },
+        "id": "19",
+        "name": "Deps",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788979576456,
+        "durationMillis": 64365,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/24/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/24/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/24/log"
+              }
+            },
+            "id": "24",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979578103,
+            "durationMillis": 2261,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "23"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/27/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/27/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/27/log"
+              }
+            },
+            "id": "27",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979580413,
+            "durationMillis": 33028,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "26"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/28/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/28/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/28/log"
+              }
+            },
+            "id": "28",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979613441,
+            "durationMillis": 26649,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "27"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/34/wfapi/describe"
+          }
+        },
+        "id": "34",
+        "name": "AI assistance",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788979640845,
+        "durationMillis": 34087,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/39/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/39/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/39/log"
+              }
+            },
+            "id": "39",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979642462,
+            "durationMillis": 1358,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "38"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/40/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/40/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/40/log"
+              }
+            },
+            "id": "40",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979643820,
+            "durationMillis": 1643,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "39"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/41/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/41/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/41/log"
+              }
+            },
+            "id": "41",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979645463,
+            "durationMillis": 16295,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "40"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/42/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/42/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/42/log"
+              }
+            },
+            "id": "42",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979661758,
+            "durationMillis": 3332,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "41"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/45/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/45/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/45/log"
+              }
+            },
+            "id": "45",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979665140,
+            "durationMillis": 1830,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "44"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/46/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/46/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/46/log"
+              }
+            },
+            "id": "46",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979666970,
+            "durationMillis": 7230,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "45"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/52/wfapi/describe"
+          }
+        },
+        "id": "52",
+        "name": "Agent flow",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788979674959,
+        "durationMillis": 268764,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/53/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/53/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/53/log"
+              }
+            },
+            "id": "53",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979674984,
+            "durationMillis": 268714,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "52"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/57/wfapi/describe"
+          }
+        },
+        "id": "57",
+        "name": "OpenAPI Spec",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788979943751,
+        "durationMillis": 58346,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/58/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/58/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/58/log"
+              }
+            },
+            "id": "58",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788979943776,
+            "durationMillis": 58291,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "57"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/62/wfapi/describe"
+          }
+        },
+        "id": "62",
+        "name": "OpenAPI on master",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980002124,
+        "durationMillis": 15996,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/63/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/63/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/63/log"
+              }
+            },
+            "id": "63",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980002152,
+            "durationMillis": 1842,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "62"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/64/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/64/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/64/log"
+              }
+            },
+            "id": "64",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980003994,
+            "durationMillis": 1366,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "63"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/65/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/65/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/65/log"
+              }
+            },
+            "id": "65",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980005360,
+            "durationMillis": 11367,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "64"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/66/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/66/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/66/log"
+              }
+            },
+            "id": "66",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980016727,
+            "durationMillis": 1365,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "65"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/70/wfapi/describe"
+          }
+        },
+        "id": "70",
+        "name": "OpenAPI diff",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980018148,
+        "durationMillis": 13651,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/71/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/71/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/71/log"
+              }
+            },
+            "id": "71",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980018175,
+            "durationMillis": 9148,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "70"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/72/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/72/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/72/log"
+              }
+            },
+            "id": "72",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980027323,
+            "durationMillis": 4451,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "71"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/76/wfapi/describe"
+          }
+        },
+        "id": "76",
+        "name": "Build",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980031824,
+        "durationMillis": 73786,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/77/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/77/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/77/log"
+              }
+            },
+            "id": "77",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980031848,
+            "durationMillis": 73729,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "76"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/81/wfapi/describe"
+          }
+        },
+        "id": "81",
+        "name": "Test",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105644,
+        "durationMillis": 139,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": []
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/93/wfapi/describe"
+          }
+        },
+        "id": "93",
+        "name": "Tests",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105783,
+        "durationMillis": 662685,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/109/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/109/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/109/log"
+              }
+            },
+            "id": "109",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980106771,
+            "durationMillis": 655799,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "103"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/164/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/164/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/164/log"
+              }
+            },
+            "id": "164",
+            "name": "Archive JUnit-formatted test results",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980762570,
+            "durationMillis": 5837,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "109"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/95/wfapi/describe"
+          }
+        },
+        "id": "95",
+        "name": "Lint",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105804,
+        "durationMillis": 215489,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/122/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/122/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/122/log"
+              }
+            },
+            "id": "122",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980112359,
+            "durationMillis": 2441,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "117"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/131/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/131/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/131/log"
+              }
+            },
+            "id": "131",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980114901,
+            "durationMillis": 204224,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "130"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/158/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/158/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/158/log"
+              }
+            },
+            "id": "158",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980319859,
+            "durationMillis": 1367,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "157"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/97/wfapi/describe"
+          }
+        },
+        "id": "97",
+        "name": "Vulnerability",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105824,
+        "durationMillis": 160352,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/123/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/123/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/123/log"
+              }
+            },
+            "id": "123",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980113147,
+            "durationMillis": 1680,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "119"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/133/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/133/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/133/log"
+              }
+            },
+            "id": "133",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980115726,
+            "durationMillis": 145680,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "132"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/150/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/150/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/150/log"
+              }
+            },
+            "id": "150",
+            "name": "Archive the artifacts",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980262394,
+            "durationMillis": 3687,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "149"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/99/wfapi/describe"
+          }
+        },
+        "id": "99",
+        "name": "Validate Migration Inventory",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105844,
+        "durationMillis": 9014,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/108/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/108/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/108/log"
+              }
+            },
+            "id": "108",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980105956,
+            "durationMillis": 8797,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "99"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/101/wfapi/describe"
+          }
+        },
+        "id": "101",
+        "name": "Lint Migrations",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980105863,
+        "durationMillis": 14349,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/124/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/124/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/124/log"
+              }
+            },
+            "id": "124",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980113935,
+            "durationMillis": 2615,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "121"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/134/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/134/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/134/log"
+              }
+            },
+            "id": "134",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980116550,
+            "durationMillis": 1406,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "124"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/135/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/135/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/135/log"
+              }
+            },
+            "id": "135",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980117956,
+            "durationMillis": 19,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "134"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/138/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/138/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/138/log"
+              }
+            },
+            "id": "138",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980118021,
+            "durationMillis": 1354,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "137"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/174/wfapi/describe"
+          }
+        },
+        "id": "174",
+        "name": "Container image",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980768637,
+        "durationMillis": 63472,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/181/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/181/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/181/log"
+              }
+            },
+            "id": "181",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980768789,
+            "durationMillis": 63165,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "180"
+            ]
+          }
+        ]
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/191/wfapi/describe"
+          }
+        },
+        "id": "191",
+        "name": "Upload artifact",
+        "execNode": "",
+        "status": "SUCCESS",
+        "startTimeMillis": 1788980832136,
+        "durationMillis": 89285,
+        "pauseDurationMillis": 0,
+        "stageFlowNodes": [
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/192/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/192/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/192/log"
+              }
+            },
+            "id": "192",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980832175,
+            "durationMillis": 1356,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "191"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/193/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/193/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/193/log"
+              }
+            },
+            "id": "193",
+            "name": "Archive the artifacts",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980833531,
+            "durationMillis": 292,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "192"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/196/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/196/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/196/log"
+              }
+            },
+            "id": "196",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980833855,
+            "durationMillis": 1363,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "195"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/197/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/197/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/197/log"
+              }
+            },
+            "id": "197",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980835218,
+            "durationMillis": 13862,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "196"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/198/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/198/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/198/log"
+              }
+            },
+            "id": "198",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980849080,
+            "durationMillis": 22,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "197"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/199/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/199/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/199/log"
+              }
+            },
+            "id": "199",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980849102,
+            "durationMillis": 1363,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "198"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/200/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/200/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/200/log"
+              }
+            },
+            "id": "200",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980850465,
+            "durationMillis": 20,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "199"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/201/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/201/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/201/log"
+              }
+            },
+            "id": "201",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980850485,
+            "durationMillis": 1433,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "200"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/204/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/204/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/204/log"
+              }
+            },
+            "id": "204",
+            "name": "Copy file to S3",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980851949,
+            "durationMillis": 62626,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "203"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/207/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/207/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/207/log"
+              }
+            },
+            "id": "207",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980914624,
+            "durationMillis": 20,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "206"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/208/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/208/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/208/log"
+              }
+            },
+            "id": "208",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980914644,
+            "durationMillis": 1564,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "207"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/209/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/209/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/209/log"
+              }
+            },
+            "id": "209",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980916208,
+            "durationMillis": 26,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "208"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/210/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/210/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/210/log"
+              }
+            },
+            "id": "210",
+            "name": "Shell Script",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980916234,
+            "durationMillis": 1432,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "209"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/213/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/213/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/213/log"
+              }
+            },
+            "id": "213",
+            "name": "Copy file to S3",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980917694,
+            "durationMillis": 3619,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "212"
+            ]
+          },
+          {
+            "_links": {
+              "self": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/216/wfapi/describe"
+              },
+              "log": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/216/wfapi/log"
+              },
+              "console": {
+                "href": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/216/log"
+              }
+            },
+            "id": "216",
+            "name": "Print Message",
+            "execNode": "",
+            "status": "SUCCESS",
+            "startTimeMillis": 1788980921356,
+            "durationMillis": 8,
+            "pauseDurationMillis": 0,
+            "parentNodes": [
+              "215"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

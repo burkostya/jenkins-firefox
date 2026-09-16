@@ -1,0 +1,92 @@
+.pgv-split-view__container {
+  position: relative;
+  display: grid;
+  gap: var(--section-padding);
+  animation: fade-in 0.1s ease-in-out both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.pgv-split-view__side-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &--vertical {
+    display: grid;
+  }
+}
+
+.pgv-split-view__divider {
+  position: absolute;
+  right: calc(var(--section-padding) * -1);
+  top: 0;
+  bottom: 0;
+  width: var(--section-padding);
+  cursor: col-resize;
+  z-index: 1;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: calc(50% - (var(--jenkins-border-width) / 2));
+    top: 0;
+    bottom: 0;
+    width: var(--jenkins-border-width);
+    border-radius: 5px;
+    transition: var(--standard-transition);
+    background-color: var(--text-color-secondary);
+    opacity: 0;
+  }
+
+  &:hover {
+    &::after {
+      opacity: 0.4;
+      scale: 150% 100%;
+    }
+  }
+
+  &:active {
+    &::after {
+      opacity: 0.8;
+      scale: 200% 100%;
+    }
+  }
+
+  &--vertical {
+    top: unset;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--section-padding) * -1);
+    width: unset;
+    height: var(--section-padding);
+    cursor: row-resize;
+
+    &::after {
+      left: 0;
+      right: 0;
+      top: unset;
+      width: unset;
+      bottom: calc(50% - (var(--jenkins-border-width) / 2));
+      height: var(--jenkins-border-width);
+    }
+
+    &:hover {
+      &::after {
+        opacity: 0.4;
+        scale: 100% 150%;
+      }
+    }
+
+    &:active {
+      &::after {
+        opacity: 0.8;
+        scale: 100% 200%;
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+@use "../../../common/styles/variables";
+@use "PipelineGraphWidget";
+
+.PWGx-PipelineGraph-container {
+  display: flex;
+  align-items: center;
+}

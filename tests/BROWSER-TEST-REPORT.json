@@ -1,0 +1,31 @@
+{
+  "browser": "Chromium 144.0.7559.96",
+  "mode": "DOM harness with mocked fetch/storage; no native Firefox test",
+  "passed": 23,
+  "checks": [
+    "missing server tree gives 16 raw statuses, no graph edges, groups or fake parent status",
+    "0.1.0 local grouping is not read or reused",
+    "extension host clears right-floated Test Result Trend at 1445, 1100 and 800px",
+    "asynchronous trend resize does not overlap the extension",
+    "raw green Test is explicitly distinguished from an enclosing-stage summary",
+    "native Stage View is restored on toggle and hidden again on return",
+    "closing restores Stage View and repeated toolbar activation is idempotent",
+    "collapsed real Test parent is red from the server tree, not green from wfapi",
+    "expanded Test contains actual supplied children and preserves server block duration",
+    "details do not overwrite server status with conflicting wfapi chunk status",
+    "logs remain text-only and are fetched only on click",
+    "truncated log response remains clearly indicated",
+    "theme changes remain isolated to the extension",
+    "graph zoom, fit and expanded viewport remain functional",
+    "collapse all and expand all use only server-defined containers",
+    "upstream collapse badge is keyboard-operable",
+    "all requests stay read-only, same-origin and job-scoped; no uncaught JS errors",
+    "server-tree collapse preferences survive remounting",
+    "tree authorization failure is not mistaken for missing plugin or successful hierarchy",
+    "invalid tree data fails to explicitly labelled flat mode without invented groups",
+    "login HTML is rejected rather than rendered as a build",
+    "unmatched server node IDs are not remapped to unrelated wfapi nodes by name",
+    "tree complete=false keeps explicit builds polling even when wfapi reports SUCCESS"
+  ],
+  "fixture_note": "tree-fixture.json is synthetic contract test data, not reconstructed from the user wfapi response."
+}

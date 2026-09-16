@@ -1,0 +1,22 @@
+PASS HTML fallback creates a graph with 11 top-level entries, not a flat list or invented groups
+PASS browser parses all 137 supplied rows and matches 16 stage IDs, with five Test children
+PASS inspector exposes verified call/body mapping, rounded block time and raw chunk separately
+PASS collapsed-node tooltip labels HTML time as approximate, not 139ms or exact 660000ms
+PASS expanded graph has five separate parallel lanes and no invented API/Checks/Migrations groups
+PASS leaf stage details keep precise wfapi timing and logs are not fetched speculatively
+PASS step logs remain text and cannot execute HTML
+PASS HTML-derived graph still clears Test Result Trend at three widths and after widget resize
+PASS synthetic failed-child conflict makes Test red and labels the parent status as derived
+PASS injection works on Pipeline Steps pages and restores the original table on toggle/close
+PASS native stages/tree remains preferred and prevents redundant HTML fetches
+PASS denied HTML returns labelled flat mode rather than bypassing access controls
+PASS native-tree permission error is preserved when the independently readable HTML is used
+PASS HTML for another build is rejected even when stage names and IDs match
+PASS unknown depth markup fails closed without guessing from names or geometry
+PASS login HTML is not mistaken for a pipeline graph
+PASS inert HTML parsing does not run scripts, load images/frames, attach elements or honor an injected base URL
+PASS cross-origin node links and inconsistent tooltip IDs are rejected
+PASS verified hierarchy collapse preferences survive remounting
+PASS all network reads are job-scoped GETs; no Replay, converter, crumb, config or mutation calls
+PASS no uncaught JavaScript errors across all HTML and native-tree scenarios
+PASSED 21 HTML browser checks

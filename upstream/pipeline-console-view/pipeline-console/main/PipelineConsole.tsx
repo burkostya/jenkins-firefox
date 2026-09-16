@@ -1,0 +1,240 @@
+import "./pipeline-console.scss";
+import "../../../pipeline-graph-view/app.scss";
+import "../../../pipeline-graph-view/pipeline-graph/styles/main.scss";
+
+import Dropdown from "../../../common/components/dropdown.tsx";
+import DropdownPortal from "../../../common/components/dropdown-portal.tsx";
+import {
+  CONSOLE,
+  DOCUMENT,
+  SETTINGS,
+} from "../../../common/components/symbols.tsx";
+import { useUserPermissions } from "../../../common/user/user-permission-provider.tsx";
+import {
+  LayoutInfo,
+  Result,
+} from "../../../pipeline-graph-view/pipeline-graph/main/PipelineGraphModel.tsx";
+import Skeleton from "./components/skeleton.tsx";
+import Stages from "./components/stages.tsx";
+import StagesCustomization from "./components/stages-customization.tsx";
+import DataTreeView from "./DataTreeView.tsx";
+import { EarlyConsoleText } from "./EarlyConsoleText.tsx";
+import { useStepsPoller } from "./hooks/use-steps-poller.ts";
+import { NoStageStepsFallback } from "./NoStageStepsFallback.tsx";
+import { useLayoutPreferences } from "./providers/user-preference-provider.tsx";
+import ScrollToTopBottom from "./scroll-to-top-bottom.tsx";
+import SplitView from "./split-view.tsx";
+import StageDetails from "./stage-details.tsx";
+import StageView from "./StageView.tsx";
+
+const stagesLayout: Partial<LayoutInfo> = {
+  graphSpacingTop: 34, // spacing for expand button
+  graphSpacingRight: 18, // spacing for expand button
+  graphSpacingBottom: 18, // spacing for zoom buttons
+  graphSpacingLeft: 18, // align with right spacing
+};
+
+export default function PipelineConsole() {
+  const rootElement = document.getElementById("console-pipeline-root");
+  const currentRunPath = rootElement?.dataset.currentRunPath!;
+  const previousRunPath = rootElement?.dataset.previousRunPath;
+  const normalizedParentJobPath = rootElement?.dataset.normalizedParentJobPath!;
+
+  const {
+    stageViewPosition,
+    mainViewVisibility,
+    setAutoStageViewHeight,
+    setDefaultStageViewHeight,
+  } = useLayoutPreferences();
+  const {
+    complete,
+    tailLogs,
+    scrollToTail,
+    startTailingLogs,
+    stopTailingLogs,
+    showEarlyConsoleText,
+    openStage,
+    openStageSteps,
+    stepBuffers,
+    expandedSteps,
+    expandAllForStage,
+    collapseAllForStage,
+    stages,
+    handleStageSelect,
+    onStepToggle,
+    fetchLogText,
+    fetchExceptionText,
+    loading,
+  } = useStepsPoller({ currentRunPath, previousRunPath });
+
+  const isOnlyPlaceholderNode = stages.length === 1 && stages[0].placeholder;
+  const isBeforePipelineStart =
+    isOnlyPlaceholderNode &&
+    // We are waiting for the pipeline to start...
+    (stages[0].state === Result.queued ||
+      // Stopped early. We will never reach the actual pipeline start.
+      complete);
+  const showSplitView =
+    loading || (!loading && stages.length > 0 && !isBeforePipelineStart);
+
+  const { canConfigure } = useUserPermissions();
+
+  return (
+    <>
+      <DropdownPortal
+        container={document.getElementById("console-pipeline-overflow-root")}
+      >
+        <Dropdown
+          className={
+            rootElement?.closest(".app-build-content")
+              ? "jenkins-details__button"
+              : ""
+          }
+          icon={SETTINGS}
+          items={[
+            showSplitView ? (
+              <StagesCustomization key="visibility-select" />
+            ) : (
+              <></>
+            ),
+            {
+              text: "View as plain text",
+              icon: DOCUMENT,
+              href: `../consoleText`,
+            },
+            {
+              text: "View classic console",
+              icon: CONSOLE,
+              href: `../console`,
+            },
+            canConfigure ? (
+              {
+                text: "Configure",
+                icon: SETTINGS,
+                href: `../../configure`,
+              }
+            ) : (
+              <></>
+            ),
+          ]}
+        />
+      </DropdownPortal>
+
+      {showSplitView && (
+        <SplitView
+          direction={stageViewPosition === "top" ? "vertical" : "horizontal"}
+          storageKey="graph"
+        >
+          {!isOnlyPlaceholderNode &&
+            (mainViewVisibility === "both" ||
+              mainViewVisibility === "graphOnly") &&
+            (loading ? (
+              <Skeleton />
+            ) : (
+              <Stages
+                layout={stagesLayout}
+                stages={stages}
+                currentRunPath={currentRunPath}
+                selectedStage={openStage || undefined}
+                stageViewPosition={stageViewPosition}
+                onStageSelect={handleStageSelect}
+                normalizedParentJobPath={normalizedParentJobPath}
+                setAutoStageViewHeight={setAutoStageViewHeight}
+                setDefaultStageViewHeight={setDefaultStageViewHeight}
+              />
+            ))}
+
+          <SplitView storageKey="stages">
+            {(mainViewVisibility === "both" ||
+              mainViewVisibility === "stagesOnly") &&
+              !isOnlyPlaceholderNode && (
+                <div
+                  key="tree-view"
+                  id="tree-view-pane"
+                  className="pgv-sticky-sidebar"
+                >
+                  {loading ? (
+                    <div className={"pgv-skeleton-column"}>
+                      <Skeleton height={2.625} />
+                      <Skeleton height={20} />
+                    </div>
+                  ) : (
+                    <DataTreeView
+                      currentRunPath={currentRunPath}
+                      onNodeSelect={handleStageSelect}
+                      selected={openStage?.id}
+                      stages={stages}
+                    />
+                  )}
+                </div>
+              )}
+
+            <div key="stage-view" id="stage-view-pane">
+              {loading ? (
+                <div className={"pgv-skeleton-column"}>
+                  <Skeleton height={2.625} />
+                  <Skeleton height={20} />
+                </div>
+              ) : showEarlyConsoleText ? (
+                <EarlyConsoleText
+                  currentRunPath={currentRunPath}
+                  tailLogs={tailLogs}
+                  scrollToTail={scrollToTail}
+                />
+              ) : (
+                <StageView
+                  tailLogs={tailLogs}
+                  scrollToTail={scrollToTail}
+                  stopTailingLogs={stopTailingLogs}
+                  stage={openStage}
+                  steps={openStageSteps}
+                  stepBuffers={stepBuffers}
+                  expandedSteps={expandedSteps}
+                  expandAllForStage={expandAllForStage}
+                  collapseAllForStage={collapseAllForStage}
+                  onStepToggle={onStepToggle}
+                  fetchLogText={fetchLogText}
+                  fetchExceptionText={fetchExceptionText}
+                  currentRunPath={currentRunPath}
+                />
+              )}
+            </div>
+          </SplitView>
+        </SplitView>
+      )}
+
+      {!loading && isBeforePipelineStart && (
+        <>
+          <StageDetails
+            stage={stages[0]}
+            steps={openStageSteps}
+            expandedSteps={expandedSteps}
+            expandAllForStage={expandAllForStage}
+            collapseAllForStage={collapseAllForStage}
+          />
+          <NoStageStepsFallback
+            currentRunPath={currentRunPath}
+            tailLogs={tailLogs}
+            scrollToTail={scrollToTail}
+          />
+        </>
+      )}
+
+      {!loading && stages.length === 0 && (
+        <NoStageStepsFallback
+          currentRunPath={currentRunPath}
+          tailLogs={tailLogs}
+          scrollToTail={scrollToTail}
+        />
+      )}
+
+      <ScrollToTopBottom
+        complete={complete}
+        loading={loading}
+        tailLogs={tailLogs}
+        startTailingLogs={startTailingLogs}
+        stopTailingLogs={stopTailingLogs}
+      />
+    </>
+  );
+}

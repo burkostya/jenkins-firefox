@@ -1,0 +1,29 @@
+{
+  "browser": "Chromium 144.0.7559.96",
+  "passed": 21,
+  "checks": [
+    "HTML fallback creates a graph with 11 top-level entries, not a flat list or invented groups",
+    "browser parses all 137 supplied rows and matches 16 stage IDs, with five Test children",
+    "inspector exposes verified call/body mapping, rounded block time and raw chunk separately",
+    "collapsed-node tooltip labels HTML time as approximate, not 139ms or exact 660000ms",
+    "expanded graph has five separate parallel lanes and no invented API/Checks/Migrations groups",
+    "leaf stage details keep precise wfapi timing and logs are not fetched speculatively",
+    "step logs remain text and cannot execute HTML",
+    "HTML-derived graph still clears Test Result Trend at three widths and after widget resize",
+    "synthetic failed-child conflict makes Test red and labels the parent status as derived",
+    "injection works on Pipeline Steps pages and restores the original table on toggle/close",
+    "native stages/tree remains preferred and prevents redundant HTML fetches",
+    "denied HTML returns labelled flat mode rather than bypassing access controls",
+    "native-tree permission error is preserved when the independently readable HTML is used",
+    "HTML for another build is rejected even when stage names and IDs match",
+    "unknown depth markup fails closed without guessing from names or geometry",
+    "login HTML is not mistaken for a pipeline graph",
+    "inert HTML parsing does not run scripts, load images/frames, attach elements or honor an injected base URL",
+    "cross-origin node links and inconsistent tooltip IDs are rejected",
+    "verified hierarchy collapse preferences survive remounting",
+    "all network reads are job-scoped GETs; no Replay, converter, crumb, config or mutation calls",
+    "no uncaught JavaScript errors across all HTML and native-tree scenarios"
+  ],
+  "fixture": "Supplied build #2 Pipeline Steps HTML and wfapi; failed-child scenario is synthetic.",
+  "limitations": "Mock fetch/storage; not live Jenkins/SSO or native Firefox extension installation."
+}

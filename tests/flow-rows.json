@@ -1,0 +1,1372 @@
+[
+  {
+    "id": 2,
+    "depth": 2,
+    "label": "Start of Pipeline",
+    "scope": "block",
+    "durationText": "23 min",
+    "durationMillis": 1380000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 3,
+    "depth": 3,
+    "label": "podTemplate",
+    "scope": "block",
+    "durationText": "23 min",
+    "durationMillis": 1380000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 4,
+    "depth": 4,
+    "label": "podTemplate block",
+    "scope": "block",
+    "durationText": "23 min",
+    "durationMillis": 1380000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 5,
+    "depth": 5,
+    "label": "node",
+    "scope": "block",
+    "durationText": "23 min",
+    "durationMillis": 1380000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 6,
+    "depth": 6,
+    "label": "node block",
+    "scope": "block",
+    "durationText": "23 min",
+    "durationMillis": 1380000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 7,
+    "depth": 7,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "37 sec",
+    "durationMillis": 37000,
+    "args": "Declarative: Checkout SCM",
+    "state": "success"
+  },
+  {
+    "id": 8,
+    "depth": 8,
+    "label": "stage block (Declarative: Checkout SCM)",
+    "scope": "block",
+    "durationText": "37 sec",
+    "durationMillis": 37000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 9,
+    "depth": 9,
+    "label": "checkout",
+    "scope": "self",
+    "durationText": "37 sec",
+    "durationMillis": 37000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 12,
+    "depth": 7,
+    "label": "withEnv",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 13,
+    "depth": 8,
+    "label": "withEnv block",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 14,
+    "depth": 9,
+    "label": "container",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 15,
+    "depth": 10,
+    "label": "container block",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 16,
+    "depth": 11,
+    "label": "withEnv",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 17,
+    "depth": 12,
+    "label": "withEnv block",
+    "scope": "block",
+    "durationText": "22 min",
+    "durationMillis": 1320000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 18,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "1 min 4 sec",
+    "durationMillis": 64000,
+    "args": "Deps",
+    "state": "success"
+  },
+  {
+    "id": 19,
+    "depth": 14,
+    "label": "stage block (Deps)",
+    "scope": "block",
+    "durationText": "1 min 4 sec",
+    "durationMillis": 64000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 20,
+    "depth": 15,
+    "label": "sshagent",
+    "scope": "block",
+    "durationText": "1 min 4 sec",
+    "durationMillis": 64000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 21,
+    "depth": 16,
+    "label": "sshagent block",
+    "scope": "block",
+    "durationText": "1 min 2 sec",
+    "durationMillis": 62000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 22,
+    "depth": 17,
+    "label": "script",
+    "scope": "block",
+    "durationText": "2.3 sec",
+    "durationMillis": 2300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 23,
+    "depth": 18,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "2.2 sec",
+    "durationMillis": 2200,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 24,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "2.2 sec",
+    "durationMillis": 2200,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 27,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "33 sec",
+    "durationMillis": 33000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 28,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "26 sec",
+    "durationMillis": 26000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 33,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "34 sec",
+    "durationMillis": 34000,
+    "args": "AI assistance",
+    "state": "success"
+  },
+  {
+    "id": 34,
+    "depth": 14,
+    "label": "stage block (AI assistance)",
+    "scope": "block",
+    "durationText": "34 sec",
+    "durationMillis": 34000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 35,
+    "depth": 15,
+    "label": "sshagent",
+    "scope": "block",
+    "durationText": "34 sec",
+    "durationMillis": 34000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 36,
+    "depth": 16,
+    "label": "sshagent block",
+    "scope": "block",
+    "durationText": "31 sec",
+    "durationMillis": 31000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 37,
+    "depth": 17,
+    "label": "script",
+    "scope": "block",
+    "durationText": "22 sec",
+    "durationMillis": 22000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 38,
+    "depth": 18,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "22 sec",
+    "durationMillis": 22000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 39,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 40,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.6 sec",
+    "durationMillis": 1600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 41,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "16 sec",
+    "durationMillis": 16000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 42,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "3.3 sec",
+    "durationMillis": 3300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 45,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.8 sec",
+    "durationMillis": 1800,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 46,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "7.2 sec",
+    "durationMillis": 7200,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 51,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "4 min 28 sec",
+    "durationMillis": 268000,
+    "args": "Agent flow",
+    "state": "success"
+  },
+  {
+    "id": 52,
+    "depth": 14,
+    "label": "stage block (Agent flow)",
+    "scope": "block",
+    "durationText": "4 min 28 sec",
+    "durationMillis": 268000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 53,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "4 min 28 sec",
+    "durationMillis": 268000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 56,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "58 sec",
+    "durationMillis": 58000,
+    "args": "OpenAPI Spec",
+    "state": "success"
+  },
+  {
+    "id": 57,
+    "depth": 14,
+    "label": "stage block (OpenAPI Spec)",
+    "scope": "block",
+    "durationText": "58 sec",
+    "durationMillis": 58000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 58,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "58 sec",
+    "durationMillis": 58000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 61,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "16 sec",
+    "durationMillis": 16000,
+    "args": "OpenAPI on master",
+    "state": "success"
+  },
+  {
+    "id": 62,
+    "depth": 14,
+    "label": "stage block (OpenAPI on master)",
+    "scope": "block",
+    "durationText": "15 sec",
+    "durationMillis": 15000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 63,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.8 sec",
+    "durationMillis": 1800,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 64,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 65,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "11 sec",
+    "durationMillis": 11000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 66,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 69,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "13 sec",
+    "durationMillis": 13000,
+    "args": "OpenAPI diff",
+    "state": "success"
+  },
+  {
+    "id": 70,
+    "depth": 14,
+    "label": "stage block (OpenAPI diff)",
+    "scope": "block",
+    "durationText": "13 sec",
+    "durationMillis": 13000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 71,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "9.1 sec",
+    "durationMillis": 9100,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 72,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "4.4 sec",
+    "durationMillis": 4400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 75,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "1 min 13 sec",
+    "durationMillis": 73000,
+    "args": "Build",
+    "state": "success"
+  },
+  {
+    "id": 76,
+    "depth": 14,
+    "label": "stage block (Build)",
+    "scope": "block",
+    "durationText": "1 min 13 sec",
+    "durationMillis": 73000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 77,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1 min 13 sec",
+    "durationMillis": 73000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 80,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "Test",
+    "state": "success"
+  },
+  {
+    "id": 81,
+    "depth": 14,
+    "label": "stage block (Test)",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 82,
+    "depth": 15,
+    "label": "parallel",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 87,
+    "depth": 16,
+    "label": "parallel block (Branch: Tests)",
+    "scope": "block",
+    "durationText": "5 ms",
+    "durationMillis": 5,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 92,
+    "depth": 17,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "Tests",
+    "state": "success"
+  },
+  {
+    "id": 93,
+    "depth": 18,
+    "label": "stage block (Tests)",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 102,
+    "depth": 19,
+    "label": "withEnv",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 103,
+    "depth": 20,
+    "label": "withEnv block",
+    "scope": "block",
+    "durationText": "11 min",
+    "durationMillis": 660000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 109,
+    "depth": 21,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "10 min",
+    "durationMillis": 600000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 164,
+    "depth": 21,
+    "label": "junit",
+    "scope": "self",
+    "durationText": "5.8 sec",
+    "durationMillis": 5800,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 88,
+    "depth": 16,
+    "label": "parallel block (Branch: Lint)",
+    "scope": "block",
+    "durationText": "5 ms",
+    "durationMillis": 5,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 94,
+    "depth": 17,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "3 min 35 sec",
+    "durationMillis": 215000,
+    "args": "Lint",
+    "state": "success"
+  },
+  {
+    "id": 95,
+    "depth": 18,
+    "label": "stage block (Lint)",
+    "scope": "block",
+    "durationText": "3 min 35 sec",
+    "durationMillis": 215000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 104,
+    "depth": 19,
+    "label": "withEnv",
+    "scope": "block",
+    "durationText": "3 min 35 sec",
+    "durationMillis": 215000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 105,
+    "depth": 20,
+    "label": "withEnv block",
+    "scope": "block",
+    "durationText": "3 min 35 sec",
+    "durationMillis": 215000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 110,
+    "depth": 21,
+    "label": "sshagent",
+    "scope": "block",
+    "durationText": "3 min 32 sec",
+    "durationMillis": 212000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 111,
+    "depth": 22,
+    "label": "sshagent block",
+    "scope": "block",
+    "durationText": "3 min 30 sec",
+    "durationMillis": 210000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 116,
+    "depth": 23,
+    "label": "script",
+    "scope": "block",
+    "durationText": "2.5 sec",
+    "durationMillis": 2500,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 117,
+    "depth": 24,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "2.4 sec",
+    "durationMillis": 2400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 122,
+    "depth": 25,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "2.4 sec",
+    "durationMillis": 2400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 131,
+    "depth": 23,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "3 min 24 sec",
+    "durationMillis": 204000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 158,
+    "depth": 21,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 89,
+    "depth": 16,
+    "label": "parallel block (Branch: Vulnerability)",
+    "scope": "block",
+    "durationText": "8 ms",
+    "durationMillis": 8,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 96,
+    "depth": 17,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "2 min 40 sec",
+    "durationMillis": 160000,
+    "args": "Vulnerability",
+    "state": "success"
+  },
+  {
+    "id": 97,
+    "depth": 18,
+    "label": "stage block (Vulnerability)",
+    "scope": "block",
+    "durationText": "2 min 40 sec",
+    "durationMillis": 160000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 106,
+    "depth": 19,
+    "label": "withEnv",
+    "scope": "block",
+    "durationText": "2 min 40 sec",
+    "durationMillis": 160000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 107,
+    "depth": 20,
+    "label": "withEnv block",
+    "scope": "block",
+    "durationText": "2 min 40 sec",
+    "durationMillis": 160000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 112,
+    "depth": 21,
+    "label": "sshagent",
+    "scope": "block",
+    "durationText": "2 min 33 sec",
+    "durationMillis": 153000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 113,
+    "depth": 22,
+    "label": "sshagent block",
+    "scope": "block",
+    "durationText": "2 min 30 sec",
+    "durationMillis": 150000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 118,
+    "depth": 23,
+    "label": "script",
+    "scope": "block",
+    "durationText": "3.4 sec",
+    "durationMillis": 3400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 119,
+    "depth": 24,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "2.5 sec",
+    "durationMillis": 2500,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 123,
+    "depth": 25,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.6 sec",
+    "durationMillis": 1600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 133,
+    "depth": 23,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "2 min 25 sec",
+    "durationMillis": 145000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 150,
+    "depth": 21,
+    "label": "archiveArtifacts",
+    "scope": "self",
+    "durationText": "3.6 sec",
+    "durationMillis": 3600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 90,
+    "depth": 16,
+    "label": "parallel block (Branch: Validate Migration Inventory)",
+    "scope": "block",
+    "durationText": "5 ms",
+    "durationMillis": 5,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 98,
+    "depth": 17,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "9 sec",
+    "durationMillis": 9000,
+    "args": "Validate Migration Inventory",
+    "state": "success"
+  },
+  {
+    "id": 99,
+    "depth": 18,
+    "label": "stage block (Validate Migration Inventory)",
+    "scope": "block",
+    "durationText": "8.9 sec",
+    "durationMillis": 8900,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 108,
+    "depth": 19,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "8.7 sec",
+    "durationMillis": 8700,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 91,
+    "depth": 16,
+    "label": "parallel block (Branch: Lint Migrations)",
+    "scope": "block",
+    "durationText": "14 sec",
+    "durationMillis": 14000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 100,
+    "depth": 17,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "14 sec",
+    "durationMillis": 14000,
+    "args": "Lint Migrations",
+    "state": "success"
+  },
+  {
+    "id": 101,
+    "depth": 18,
+    "label": "stage block (Lint Migrations)",
+    "scope": "block",
+    "durationText": "14 sec",
+    "durationMillis": 14000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 114,
+    "depth": 19,
+    "label": "sshagent",
+    "scope": "block",
+    "durationText": "9.4 sec",
+    "durationMillis": 9400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 115,
+    "depth": 20,
+    "label": "sshagent block",
+    "scope": "block",
+    "durationText": "7.1 sec",
+    "durationMillis": 7100,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 120,
+    "depth": 21,
+    "label": "script",
+    "scope": "block",
+    "durationText": "7 sec",
+    "durationMillis": 7000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 121,
+    "depth": 22,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "7 sec",
+    "durationMillis": 7000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 124,
+    "depth": 23,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "2.6 sec",
+    "durationMillis": 2600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 134,
+    "depth": 23,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.4 sec",
+    "durationMillis": 1400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 135,
+    "depth": 23,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "19 ms",
+    "durationMillis": 19,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 136,
+    "depth": 23,
+    "label": "container",
+    "scope": "block",
+    "durationText": "1.4 sec",
+    "durationMillis": 1400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 137,
+    "depth": 24,
+    "label": "container block",
+    "scope": "block",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 138,
+    "depth": 25,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 173,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "Container image",
+    "state": "success"
+  },
+  {
+    "id": 174,
+    "depth": 14,
+    "label": "stage block (Container image)",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 175,
+    "depth": 15,
+    "label": "withCredentials",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 176,
+    "depth": 16,
+    "label": "withCredentials block",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 177,
+    "depth": 17,
+    "label": "container",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 178,
+    "depth": 18,
+    "label": "container block",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 179,
+    "depth": 19,
+    "label": "script",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 180,
+    "depth": 20,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 181,
+    "depth": 21,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1 min 3 sec",
+    "durationMillis": 63000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 190,
+    "depth": 13,
+    "label": "stage",
+    "scope": "block",
+    "durationText": "1 min 29 sec",
+    "durationMillis": 89000,
+    "args": "Upload artifact",
+    "state": "success"
+  },
+  {
+    "id": 191,
+    "depth": 14,
+    "label": "stage block (Upload artifact)",
+    "scope": "block",
+    "durationText": "1 min 29 sec",
+    "durationMillis": 89000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 192,
+    "depth": 15,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 193,
+    "depth": 15,
+    "label": "archiveArtifacts",
+    "scope": "self",
+    "durationText": "0.29 sec",
+    "durationMillis": 290,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 194,
+    "depth": 15,
+    "label": "script",
+    "scope": "block",
+    "durationText": "1 min 27 sec",
+    "durationMillis": 87000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 195,
+    "depth": 16,
+    "label": "script block",
+    "scope": "block",
+    "durationText": "1 min 27 sec",
+    "durationMillis": 87000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 196,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 197,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "13 sec",
+    "durationMillis": 13000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 198,
+    "depth": 17,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "22 ms",
+    "durationMillis": 22,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 199,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.3 sec",
+    "durationMillis": 1300,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 200,
+    "depth": 17,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "20 ms",
+    "durationMillis": 20,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 201,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.4 sec",
+    "durationMillis": 1400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 202,
+    "depth": 17,
+    "label": "withAWS",
+    "scope": "block",
+    "durationText": "1 min 2 sec",
+    "durationMillis": 62000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 203,
+    "depth": 18,
+    "label": "withAWS block",
+    "scope": "block",
+    "durationText": "1 min 2 sec",
+    "durationMillis": 62000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 204,
+    "depth": 19,
+    "label": "s3Upload",
+    "scope": "self",
+    "durationText": "1 min 2 sec",
+    "durationMillis": 62000,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 207,
+    "depth": 17,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "20 ms",
+    "durationMillis": 20,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 208,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.5 sec",
+    "durationMillis": 1500,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 209,
+    "depth": 17,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "26 ms",
+    "durationMillis": 26,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 210,
+    "depth": 17,
+    "label": "sh",
+    "scope": "self",
+    "durationText": "1.4 sec",
+    "durationMillis": 1400,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 211,
+    "depth": 17,
+    "label": "withAWS",
+    "scope": "block",
+    "durationText": "3.6 sec",
+    "durationMillis": 3600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 212,
+    "depth": 18,
+    "label": "withAWS block",
+    "scope": "block",
+    "durationText": "3.6 sec",
+    "durationMillis": 3600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 213,
+    "depth": 19,
+    "label": "s3Upload",
+    "scope": "self",
+    "durationText": "3.6 sec",
+    "durationMillis": 3600,
+    "args": "",
+    "state": "success"
+  },
+  {
+    "id": 216,
+    "depth": 17,
+    "label": "echo",
+    "scope": "self",
+    "durationText": "8 ms",
+    "durationMillis": 8,
+    "args": "",
+    "state": "success"
+  }
+]

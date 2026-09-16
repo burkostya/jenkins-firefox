@@ -1,0 +1,137 @@
+import Tippy, { TippyProps } from "@tippyjs/react";
+import { isValidElement, ReactElement, ReactNode, useState } from "react";
+
+import Tooltip from "./tooltip.tsx";
+
+/**
+ * A customized (and customizable) implementation of Tippy dropdowns
+ */
+export default function Dropdown({
+  items,
+  tooltip = "More actions",
+  disabled,
+  className,
+  icon,
+}: DropdownProps) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <DynamicDropdown
+      visible={visible}
+      setVisible={setVisible}
+      items={items}
+      tooltip={tooltip}
+      disabled={disabled}
+      className={className}
+      icon={icon}
+    />
+  );
+}
+
+export function DynamicDropdown({
+  visible,
+  setVisible,
+  items,
+  tooltip = "More actions",
+  disabled,
+  className,
+  icon,
+}: DynamicDropdownProps) {
+  const show = () => setVisible(true);
+  const hide = () => setVisible(false);
+
+  return (
+    <Tooltip content={tooltip}>
+      <Tippy
+        visible={visible}
+        onClickOutside={hide}
+        {...DefaultDropdownProps}
+        content={
+          <div className="jenkins-dropdown">
+            {items.map((item, index) => {
+              if (item === "separator") {
+                return (
+                  <div
+                    key={`separator-${index}`}
+                    className="jenkins-dropdown__separator"
+                  />
+                );
+              }
+
+              if (isValidElement(item)) {
+                return (
+                  <div key={index} className="jenkins-dropdown__custom-item">
+                    {item}
+                  </div>
+                );
+              }
+
+              const dropdownItem = item as DropdownItem;
+              return (
+                <a
+                  key={index}
+                  className="jenkins-dropdown__item"
+                  href={dropdownItem.href}
+                  target={dropdownItem.target}
+                  download={dropdownItem.download}
+                >
+                  <div className="jenkins-dropdown__item__icon">
+                    {dropdownItem.icon}
+                  </div>
+                  {dropdownItem.text}
+                </a>
+              );
+            })}
+          </div>
+        }
+      >
+        <button
+          className={"jenkins-button " + className}
+          type="button"
+          disabled={disabled}
+          onClick={visible ? hide : show}
+        >
+          <span className={"jenkins-visually-hidden"}>{tooltip}</span>
+          {icon || (
+            <div className="jenkins-overflow-button__ellipsis">
+              <span />
+              <span />
+              <span />
+            </div>
+          )}
+        </button>
+      </Tippy>
+    </Tooltip>
+  );
+}
+
+export const DefaultDropdownProps: TippyProps = {
+  theme: "dropdown",
+  duration: 250,
+  touch: true,
+  animation: "dropdown",
+  interactive: true,
+  offset: [0, 0],
+  placement: "bottom-start",
+  arrow: false,
+};
+
+interface DropdownProps {
+  items: (DropdownItem | ReactElement | "separator")[];
+  tooltip?: string;
+  disabled?: boolean;
+  className?: string;
+  icon?: ReactNode;
+}
+
+interface DynamicDropdownProps extends DropdownProps {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+}
+
+interface DropdownItem {
+  text: string;
+  href?: string;
+  icon: ReactNode;
+  target?: string;
+  download?: string;
+}

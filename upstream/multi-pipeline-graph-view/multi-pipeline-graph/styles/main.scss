@@ -1,0 +1,19 @@
+@use "../../../common/styles/variables";
+@use "../../../pipeline-graph-view/pipeline-graph/styles/PipelineGraphWidget";
+@use "MultiPipelineGraph";
+
+.PWGx-PipelineGraph-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-x: auto;
+  margin-bottom: 0px;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .PWGx-PipelineGraph {
+    margin-right: auto;
+  }
+}

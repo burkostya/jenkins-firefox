@@ -1,0 +1,52 @@
+.app-page-body--one-column {
+  margin: unset;
+  max-width: unset;
+}
+
+.pgw-fullscreen-controls,
+.pgw-zoom-controls {
+  .jenkins-button {
+    --button-background: transparent;
+    --button-background--hover: transparent;
+    --button-background--active: transparent;
+    --button-box-shadow--focus: transparent;
+
+    min-height: 2rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: inherit !important;
+
+    &::before {
+      border: none;
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+      transition: color var(--standard-transition);
+    }
+
+    &:not(:disabled) {
+      &:hover,
+      &:active {
+        svg {
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+}
+
+.pgw-fullscreen-controls {
+  left: unset !important;
+  bottom: unset !important;
+}
+
+.pgw-zoom-controls {
+  left: unset !important;
+  top: unset !important;
+}
+
+.pgv-console-card {
+  margin: 0 -0.625rem -0.625rem -0.625rem;
+}

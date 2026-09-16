@@ -1,0 +1,79 @@
+// STRUCTURAL EXAMPLE ONLY - not a replacement for the missing original Jenkinsfile.
+// Copy the original agents, options, environment, credentials, when, post, retry,
+// timeout and stage bodies deliberately. This template intentionally fails at TODOs.
+// It assumes the five checks should be siblings in one parallel block. Confirm
+// that against the real Jenkinsfile. No nested parallel group is invented.
+// It has NOT been run through your Jenkins Declarative validator.
+pipeline {
+    agent any // Replace with your original agent strategy.
+    options {
+        skipDefaultCheckout(true)
+    }
+    stages {
+        stage('Prepare') {
+            stages {
+                stage('Checkout SCM') {
+                    steps { checkout scm }
+                }
+                stage('Deps') {
+                    steps { error('TODO: move the original Deps body here') }
+                }
+                stage('AI assistance') {
+                    steps { error('TODO: move the original AI assistance body here') }
+                }
+            }
+        }
+        stage('API') {
+            stages {
+                stage('Agent flow') {
+                    steps { error('TODO: move the original Agent flow body here') }
+                }
+                stage('OpenAPI Spec') {
+                    steps { error('TODO: move the original OpenAPI Spec body here') }
+                }
+                stage('OpenAPI on master') {
+                    steps { error('TODO: move the original OpenAPI on master body here') }
+                }
+                stage('OpenAPI diff') {
+                    steps { error('TODO: move the original OpenAPI diff body here') }
+                }
+            }
+        }
+        stage('Build & Quality') {
+            stages {
+                stage('Build') {
+                    steps { error('TODO: move the original Build body here') }
+                }
+                stage('Test') {
+                    parallel {
+                        stage('Tests') {
+                            steps { error('TODO: move the original Tests body here') }
+                        }
+                        stage('Lint') {
+                            steps { error('TODO: move the original Lint body here') }
+                        }
+                        stage('Vulnerability') {
+                            steps { error('TODO: move the original Vulnerability body here') }
+                        }
+                        stage('Validate Migration Inventory') {
+                            steps { error('TODO: move the original validation body here') }
+                        }
+                        stage('Lint Migrations') {
+                            steps { error('TODO: move the original migration lint body here') }
+                        }
+                    }
+                }
+            }
+        }
+        stage('Publish') {
+            stages {
+                stage('Container image') {
+                    steps { error('TODO: move the original Container image body here') }
+                }
+                stage('Upload artifact') {
+                    steps { error('TODO: move the original Upload artifact body here') }
+                }
+            }
+        }
+    }
+}

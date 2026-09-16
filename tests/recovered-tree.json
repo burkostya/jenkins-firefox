@@ -1,0 +1,496 @@
+{
+  "source": "flow-graph-table",
+  "stages": [
+    {
+      "id": 8,
+      "name": "Declarative: Checkout SCM",
+      "title": "Declarative: Checkout SCM",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788979539204,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/8/log/",
+      "isSequential": false,
+      "totalDurationMillis": 37136
+    },
+    {
+      "id": 19,
+      "name": "Deps",
+      "title": "Deps",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788979576456,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/19/log/",
+      "isSequential": false,
+      "totalDurationMillis": 64365
+    },
+    {
+      "id": 34,
+      "name": "AI assistance",
+      "title": "AI assistance",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788979640845,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/34/log/",
+      "isSequential": false,
+      "totalDurationMillis": 34087
+    },
+    {
+      "id": 52,
+      "name": "Agent flow",
+      "title": "Agent flow",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788979674959,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/52/log/",
+      "isSequential": false,
+      "totalDurationMillis": 268764
+    },
+    {
+      "id": 57,
+      "name": "OpenAPI Spec",
+      "title": "OpenAPI Spec",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788979943751,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/57/log/",
+      "isSequential": false,
+      "totalDurationMillis": 58346
+    },
+    {
+      "id": 62,
+      "name": "OpenAPI on master",
+      "title": "OpenAPI on master",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788980002124,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/62/log/",
+      "isSequential": false,
+      "totalDurationMillis": 15996
+    },
+    {
+      "id": 70,
+      "name": "OpenAPI diff",
+      "title": "OpenAPI diff",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788980018148,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/70/log/",
+      "isSequential": false,
+      "totalDurationMillis": 13651
+    },
+    {
+      "id": 76,
+      "name": "Build",
+      "title": "Build",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788980031824,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/76/log/",
+      "isSequential": false,
+      "totalDurationMillis": 73786
+    },
+    {
+      "id": 81,
+      "name": "Test",
+      "title": "Test",
+      "state": "success",
+      "type": "STAGE",
+      "children": [
+        {
+          "id": 93,
+          "name": "Tests",
+          "title": "Tests",
+          "state": "success",
+          "type": "PARALLEL",
+          "children": [],
+          "startTimeMillis": 1788980105783,
+          "pauseDurationMillis": 0,
+          "agent": "",
+          "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/93/log/",
+          "isSequential": false,
+          "totalDurationMillis": 662685
+        },
+        {
+          "id": 95,
+          "name": "Lint",
+          "title": "Lint",
+          "state": "success",
+          "type": "PARALLEL",
+          "children": [],
+          "startTimeMillis": 1788980105804,
+          "pauseDurationMillis": 0,
+          "agent": "",
+          "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/95/log/",
+          "isSequential": false,
+          "totalDurationMillis": 215489
+        },
+        {
+          "id": 97,
+          "name": "Vulnerability",
+          "title": "Vulnerability",
+          "state": "success",
+          "type": "PARALLEL",
+          "children": [],
+          "startTimeMillis": 1788980105824,
+          "pauseDurationMillis": 0,
+          "agent": "",
+          "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/97/log/",
+          "isSequential": false,
+          "totalDurationMillis": 160352
+        },
+        {
+          "id": 99,
+          "name": "Validate Migration Inventory",
+          "title": "Validate Migration Inventory",
+          "state": "success",
+          "type": "PARALLEL",
+          "children": [],
+          "startTimeMillis": 1788980105844,
+          "pauseDurationMillis": 0,
+          "agent": "",
+          "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/99/log/",
+          "isSequential": false,
+          "totalDurationMillis": 9014
+        },
+        {
+          "id": 101,
+          "name": "Lint Migrations",
+          "title": "Lint Migrations",
+          "state": "success",
+          "type": "PARALLEL",
+          "children": [],
+          "startTimeMillis": 1788980105863,
+          "pauseDurationMillis": 0,
+          "agent": "",
+          "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/101/log/",
+          "isSequential": false,
+          "totalDurationMillis": 14349
+        }
+      ],
+      "startTimeMillis": 1788980105644,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/81/log/",
+      "isSequential": false,
+      "totalDurationMillis": 660000,
+      "pauseLiveTotal": true,
+      "pgvxDurationLabel": "~ 11 min"
+    },
+    {
+      "id": 174,
+      "name": "Container image",
+      "title": "Container image",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788980768637,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/174/log/",
+      "isSequential": false,
+      "totalDurationMillis": 63472
+    },
+    {
+      "id": 191,
+      "name": "Upload artifact",
+      "title": "Upload artifact",
+      "state": "success",
+      "type": "STAGE",
+      "children": [],
+      "startTimeMillis": 1788980832136,
+      "pauseDurationMillis": 0,
+      "agent": "",
+      "url": "/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/execution/node/191/log/",
+      "isSequential": false,
+      "totalDurationMillis": 89285
+    }
+  ],
+  "meta": {
+    "8": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 7,
+        "bodyId": 8,
+        "depth": 7,
+        "tableState": "success",
+        "tableDuration": "37 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 37136,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "19": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 18,
+        "bodyId": 19,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "1 min 4 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 64365,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "34": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 33,
+        "bodyId": 34,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "34 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 34087,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "52": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 51,
+        "bodyId": 52,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "4 min 28 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 268764,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "57": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 56,
+        "bodyId": 57,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "58 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 58346,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "62": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 61,
+        "bodyId": 62,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "16 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 15996,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "70": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 69,
+        "bodyId": 70,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "13 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 13651,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "76": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 75,
+        "bodyId": 76,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "1 min 13 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 73786,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "81": {
+      "kind": "group",
+      "mode": "parallel",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 80,
+        "bodyId": 81,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "11 min",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 139,
+        "stateSource": "derived-children",
+        "durationSource": "html-rounded",
+        "parallelId": 82
+      }
+    },
+    "93": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 92,
+        "bodyId": 93,
+        "depth": 17,
+        "tableState": "success",
+        "tableDuration": "11 min",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 662685,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi",
+        "branchId": 87
+      }
+    },
+    "95": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 94,
+        "bodyId": 95,
+        "depth": 17,
+        "tableState": "success",
+        "tableDuration": "3 min 35 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 215489,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi",
+        "branchId": 88
+      }
+    },
+    "97": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 96,
+        "bodyId": 97,
+        "depth": 17,
+        "tableState": "success",
+        "tableDuration": "2 min 40 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 160352,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi",
+        "branchId": 89
+      }
+    },
+    "99": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 98,
+        "bodyId": 99,
+        "depth": 17,
+        "tableState": "success",
+        "tableDuration": "9 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 9014,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi",
+        "branchId": 90
+      }
+    },
+    "101": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 100,
+        "bodyId": 101,
+        "depth": 17,
+        "tableState": "success",
+        "tableDuration": "14 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 14349,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi",
+        "branchId": 91
+      }
+    },
+    "174": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 173,
+        "bodyId": 174,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "1 min 3 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 63472,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    },
+    "191": {
+      "kind": "stage",
+      "mode": "sequence",
+      "source": "flow-graph-table",
+      "flow": {
+        "stepId": 190,
+        "bodyId": 191,
+        "depth": 13,
+        "tableState": "success",
+        "tableDuration": "1 min 29 sec",
+        "rawState": "SUCCESS",
+        "rawDurationMillis": 89285,
+        "stateSource": "wfapi",
+        "durationSource": "wfapi"
+      }
+    }
+  }
+}

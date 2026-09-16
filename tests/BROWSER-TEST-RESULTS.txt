@@ -1,0 +1,24 @@
+PASS missing server tree gives 16 raw statuses, no graph edges, groups or fake parent status
+PASS 0.1.0 local grouping is not read or reused
+PASS extension host clears right-floated Test Result Trend at 1445, 1100 and 800px
+PASS asynchronous trend resize does not overlap the extension
+PASS raw green Test is explicitly distinguished from an enclosing-stage summary
+PASS native Stage View is restored on toggle and hidden again on return
+PASS closing restores Stage View and repeated toolbar activation is idempotent
+PASS collapsed real Test parent is red from the server tree, not green from wfapi
+PASS expanded Test contains actual supplied children and preserves server block duration
+PASS details do not overwrite server status with conflicting wfapi chunk status
+PASS logs remain text-only and are fetched only on click
+PASS truncated log response remains clearly indicated
+PASS theme changes remain isolated to the extension
+PASS graph zoom, fit and expanded viewport remain functional
+PASS collapse all and expand all use only server-defined containers
+PASS upstream collapse badge is keyboard-operable
+PASS all requests stay read-only, same-origin and job-scoped; no uncaught JS errors
+PASS server-tree collapse preferences survive remounting
+PASS tree authorization failure is not mistaken for missing plugin or successful hierarchy
+PASS invalid tree data fails to explicitly labelled flat mode without invented groups
+PASS login HTML is rejected rather than rendered as a build
+PASS unmatched server node IDs are not remapped to unrelated wfapi nodes by name
+PASS tree complete=false keeps explicit builds polling even when wfapi reports SUCCESS
+PASSED 23 browser checks

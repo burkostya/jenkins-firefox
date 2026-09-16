@@ -1,0 +1,276 @@
+import "./status-icon.scss";
+
+import { ReactNode, useEffect, useState } from "react";
+
+import {
+  Result,
+  StageInfo,
+} from "../../pipeline-graph-view/pipeline-graph/main/PipelineGraphModel.tsx";
+
+export function useStageProgress(stage: StageInfo) {
+  const [percentage, setPercentage] = useState(0);
+  useEffect(() => {
+    if (stage.state !== Result.running) {
+      // percentage is only needed for the running icon.
+      setPercentage(0);
+      return;
+    }
+    const update = () => {
+      const currentTiming =
+        stage.totalDurationMillis ?? Date.now() - stage.startTimeMillis;
+      const previousTiming = stage.previousTotalDurationMillis ?? 10_000;
+      setPercentage(Math.min(99, (currentTiming / previousTiming) * 100));
+    };
+    update();
+    const inter = setInterval(update, 1_000);
+    return () => clearInterval(inter);
+  }, [
+    stage.state,
+    stage.startTimeMillis,
+    stage.totalDurationMillis,
+    stage.previousTotalDurationMillis,
+  ]);
+  return percentage;
+}
+
+export function StageStatusIcon({ stage }: { stage: StageInfo }) {
+  return (
+    <StatusIcon
+      status={stage.state}
+      percentage={useStageProgress(stage)}
+      skeleton={stage.skeleton}
+    />
+  );
+}
+
+/**
+ * Visual representation of a job or build status
+ */
+export default function StatusIcon({
+  status,
+  percentage,
+  skeleton,
+}: StatusIconProps) {
+  const viewBoxSize = 512;
+  const strokeWidth = status === "running" ? 50 : 0;
+  const radius = (viewBoxSize - strokeWidth) / 2.2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - ((percentage ?? 100) / 100) * circumference;
+
+  return (
+    <svg
+      viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+      className={"pgv-status-icon " + resultToColor(status, skeleton)}
+      opacity={skeleton ? 0.5 : 1}
+      role={"img"}
+      aria-label={status}
+    >
+      <circle
+        cx={viewBoxSize / 2}
+        cy={viewBoxSize / 2}
+        r={radius - 20}
+        fill="var(--card-background)"
+      />
+      <circle
+        cx={viewBoxSize / 2}
+        cy={viewBoxSize / 2}
+        r={radius}
+        fill="var(--color)"
+        opacity={"var(--status-background-opacity)"}
+        style={{
+          transition: "var(--standard-transition)",
+        }}
+      />
+      <circle
+        cx={viewBoxSize / 2}
+        cy={viewBoxSize / 2}
+        r={radius - 10}
+        fill="none"
+        stroke="var(--color)"
+        strokeWidth={20}
+        strokeOpacity={"var(--status-border-opacity)"}
+      />
+      <circle
+        cx={viewBoxSize / 2}
+        cy={viewBoxSize / 2}
+        r={radius}
+        fill="none"
+        stroke="var(--color)"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        style={{
+          transform: "rotate(-90deg)",
+          transformOrigin: "50% 50%",
+          transition: "var(--standard-transition)",
+        }}
+      />
+
+      <Group currentStatus={status} status={Result.running}>
+        <circle
+          cx="256"
+          cy="256"
+          r="40"
+          fill="var(--color)"
+          className={status === "running" ? "pgv-scale" : ""}
+        />
+      </Group>
+
+      <Group currentStatus={status} status={Result.success}>
+        <path
+          d="M336 189L224 323L176 269.4"
+          fill="transparent"
+          stroke="var(--color)"
+          strokeWidth={32}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Group>
+
+      <Group currentStatus={status} status={Result.failure}>
+        <path
+          fill="none"
+          stroke="var(--color)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={32}
+          d="M320 320L192 192M192 320l128-128"
+        />
+      </Group>
+
+      <Group currentStatus={status} status={Result.aborted}>
+        <path
+          fill="none"
+          stroke="var(--color)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={32}
+          d="M192 320l128-128"
+        />
+      </Group>
+
+      <Group currentStatus={status} status={Result.unstable}>
+        <path
+          d="M250.26 166.05L256 288l5.73-121.95a5.74 5.74 0 00-5.79-6h0a5.74 5.74 0 00-5.68 6z"
+          fill="none"
+          stroke="var(--color)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={32}
+        />
+        <ellipse cx="256" cy="350" rx="26" ry="26" fill="var(--color)" />
+      </Group>
+
+      <Group currentStatus={status} status={Result.skipped}>
+        <g transform="scale(0.8)">
+          <path
+            fill="none"
+            stroke="var(--color)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="36"
+            d="M216 352l96-96-96-96"
+            transform="translate(-55, 0)"
+          />
+          <path
+            fill="none"
+            stroke="var(--color)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="36"
+            d="M216 352l96-96-96-96"
+            transform="translate(75, 0)"
+          />
+        </g>
+      </Group>
+
+      <Group currentStatus={status} status={Result.paused}>
+        <path
+          fill="none"
+          stroke="var(--color)"
+          strokeLinecap="round"
+          strokeMiterlimit="10"
+          strokeWidth={32}
+          d="M208 192v128M304 192v128"
+        />
+      </Group>
+
+      <Group currentStatus={status} status={Result.queued}>
+        <g transform="scale(0.6)">
+          <path
+            d="M145.61 464h220.78c19.8 0 35.55-16.29 33.42-35.06C386.06 308 304 310 304 256s83.11-51 95.8-172.94c2-18.78-13.61-35.06-33.41-35.06H145.61c-19.8 0-35.37 16.28-33.41 35.06C124.89 205 208 201 208 256s-82.06 52-95.8 172.94c-2.14 18.77 13.61 35.06 33.41 35.06z"
+            fill="none"
+            stroke="var(--color)"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={32}
+          />
+          <path
+            d="M343.3 432H169.13c-15.6 0-20-18-9.06-29.16C186.55 376 240 356.78 240 326V224c0-19.85-38-35-61.51-67.2-3.88-5.31-3.49-12.8 6.37-12.8h142.73c8.41 0 10.23 7.43 6.4 12.75C310.82 189 272 204.05 272 224v102c0 30.53 55.71 47 80.4 76.87 9.95 12.04 6.47 29.13-9.1 29.13z"
+            fill="var(--color)"
+          />
+        </g>
+      </Group>
+
+      <Group currentStatus={status} status={Result.not_built}>
+        <circle cx="256" cy="256" r="30" fill="var(--color)" />
+        <circle cx="352" cy="256" r="30" fill="var(--color)" />
+        <circle cx="160" cy="256" r="30" fill="var(--color)" />
+      </Group>
+
+      <Group currentStatus={status} status={Result.unknown}>
+        <path
+          d="M200 202.29s.84-17.5 19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45 10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296"
+          fill="none"
+          stroke="var(--color)"
+          strokeLinecap="round"
+          strokeMiterlimit="10"
+          strokeWidth="28"
+        />
+        <circle cx="250" cy="348" r="20" fill="var(--color)" />
+      </Group>
+    </svg>
+  );
+}
+
+function Group({
+  currentStatus,
+  status,
+  children,
+}: {
+  currentStatus: Result;
+  status: Result;
+  children: ReactNode;
+}) {
+  if (currentStatus !== status) return null;
+  return <>{children}</>;
+}
+
+export function resultToColor(result: Result, skeleton: boolean | undefined) {
+  if (skeleton) {
+    return "jenkins-!-skipped-color";
+  }
+
+  switch (result) {
+    case "success":
+      return "jenkins-!-success-color";
+    case "failure":
+      return "jenkins-!-error-color";
+    case "running":
+      return "jenkins-!-accent-color";
+    case "unstable":
+      return "jenkins-!-warning-color";
+    case "paused":
+    case "queued":
+      return "jenkins-!-accent-color";
+    default:
+      return "jenkins-!-skipped-color";
+  }
+}
+
+interface StatusIconProps {
+  status: Result;
+  percentage?: number;
+  skeleton?: boolean;
+}

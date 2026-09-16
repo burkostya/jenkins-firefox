@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Pipeline Graph Local for Jenkins",
+  "version": "0.3.0",
+  "description": "Jenkins graph from server tree or Pipeline Steps HTML; read-only wfapi fallback. Based on Pipeline Graph View 1013.v9f83fd83c063.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "Show local Pipeline Graph on this Jenkins job",
+    "default_icon": "icon.svg"
+  },
+  "icons": {
+    "48": "icon.svg",
+    "96": "icon.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "pipeline-graph-local@local.invalid",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'"
+  }
+}

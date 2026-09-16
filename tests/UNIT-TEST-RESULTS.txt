@@ -1,0 +1,392 @@
+
+> pipeline-graph-local-firefox@0.3.0 test
+> node --test tests/model.test.cjs tests/security.test.cjs tests/flow-table.test.cjs
+
+TAP version 13
+# Subtest: supplied HTML has 137 rows; projection preserves 16 actual stages in 11 roots
+ok 1 - supplied HTML has 137 rows; projection preserves 16 actual stages in 11 roots
+  ---
+  duration_ms: 4.042523
+  type: 'test'
+  ...
+# Subtest: Test is an actual enclosing stage with five verified parallel branches
+ok 2 - Test is an actual enclosing stage with five verified parallel branches
+  ---
+  duration_ms: 1.590091
+  type: 'test'
+  ...
+# Subtest: duration precision is honest: parent uses rounded HTML, leaves exact wfapi values
+ok 3 - duration precision is honest: parent uses rounded HTML, leaves exact wfapi values
+  ---
+  duration_ms: 0.508719
+  type: 'test'
+  ...
+# Subtest: no Prepare, API, Checks, Migrations or Publish grouping is invented
+ok 4 - no Prepare, API, Checks, Migrations or Publish grouping is invented
+  ---
+  duration_ms: 0.464323
+  type: 'test'
+  ...
+# Subtest: technical wrappers and stage call/body duplicate rows are not graph groups
+ok 5 - technical wrappers and stage call/body duplicate rows are not graph groups
+  ---
+  duration_ms: 0.499495
+  type: 'test'
+  ...
+# Subtest: call/body mapping does not assume adjacent numeric IDs
+ok 6 - call/body mapping does not assume adjacent numeric IDs
+  ---
+  duration_ms: 0.879054
+  type: 'test'
+  ...
+# Subtest: row order and indentation, not increasing numeric IDs, determine topology
+ok 7 - row order and indentation, not increasing numeric IDs, determine topology
+  ---
+  duration_ms: 0.93077
+  type: 'test'
+  ...
+# Subtest: derived failed container does not retain a misleading green wfapi prefix
+ok 8 - derived failed container does not retain a misleading green wfapi prefix
+  ---
+  duration_ms: 0.680502
+  type: 'test'
+  ...
+# Subtest: HTML step failure inside a caught error does not override a successful wfapi stage
+ok 9 - HTML step failure inside a caught error does not override a successful wfapi stage
+  ---
+  duration_ms: 0.892785
+  type: 'test'
+  ...
+# Subtest: not-executed branches are not converted to failures
+ok 10 - not-executed branches are not converted to failures
+  ---
+  duration_ms: 0.913555
+  type: 'test'
+  ...
+# Subtest: wfapi stages absent from HTML reject inconsistent snapshots rather than guessing
+ok 11 - wfapi stages absent from HTML reject inconsistent snapshots rather than guessing
+  ---
+  duration_ms: 0.976778
+  type: 'test'
+  ...
+# Subtest: duplicate row IDs, missing depths and non-block parents fail closed
+ok 12 - duplicate row IDs, missing depths and non-block parents fail closed
+  ---
+  duration_ms: 0.857033
+  type: 'test'
+  ...
+# Subtest: mismatched stage body labels and orphan bodies fail closed
+ok 13 - mismatched stage body labels and orphan bodies fail closed
+  ---
+  duration_ms: 0.779367
+  type: 'test'
+  ...
+# Subtest: unsupported indentation is not inferred from pixel width or CSS
+ok 14 - unsupported indentation is not inferred from pixel width or CSS
+  ---
+  duration_ms: 0.474289
+  type: 'test'
+  ...
+# Subtest: human timing parser preserves no-timing, unknown locale and fractional units
+ok 15 - human timing parser preserves no-timing, unknown locale and fractional units
+  ---
+  duration_ms: 0.486787
+  type: 'test'
+  ...
+# Subtest: unavailable container time is never substituted with 139ms
+ok 16 - unavailable container time is never substituted with 139ms
+  ---
+  duration_ms: 0.622537
+  type: 'test'
+  ...
+# Subtest: build identity mismatch is rejected
+ok 17 - build identity mismatch is rejected
+  ---
+  duration_ms: 0.157712
+  type: 'test'
+  ...
+# Subtest: live runs use snapshot-labelled HTML timing and request further updates
+ok 18 - live runs use snapshot-labelled HTML timing and request further updates
+  ---
+  duration_ms: 0.763765
+  type: 'test'
+  ...
+# Subtest: explicit nested sequential stages are retained as declared execution containers
+ok 19 - explicit nested sequential stages are retained as declared execution containers
+  ---
+  duration_ms: 0.350516
+  type: 'test'
+  ...
+# Subtest: parallel branches with multiple sequential stages keep their explicit branch wrapper
+ok 20 - parallel branches with multiple sequential stages keep their explicit branch wrapper
+  ---
+  duration_ms: 0.384676
+  type: 'test'
+  ...
+# Subtest: two parallel blocks in sequence are not merged into a single invented fork
+ok 21 - two parallel blocks in sequence are not merged into a single invented fork
+  ---
+  duration_ms: 0.245642
+  type: 'test'
+  ...
+# Subtest: same stage names in different branches keep separate exact node IDs
+ok 22 - same stage names in different branches keep separate exact node IDs
+  ---
+  duration_ms: 0.288656
+  type: 'test'
+  ...
+# Subtest: upstream layout on recovered HTML has finite geometry and real branch separation
+ok 23 - upstream layout on recovered HTML has finite geometry and real branch separation
+  ---
+  duration_ms: 2.369068
+  type: 'test'
+  ...
+# Subtest: flat adapter preserves all 16 supplied stages without creating parents
+ok 24 - flat adapter preserves all 16 supplied stages without creating parents
+  ---
+  duration_ms: 1.728756
+  type: 'test'
+  ...
+# Subtest: raw Test status and 139ms are preserved but not treated as an enclosing stage
+ok 25 - raw Test status and 139ms are preserved but not treated as an enclosing stage
+  ---
+  duration_ms: 0.237049
+  type: 'test'
+  ...
+# Subtest: server tree provides Test containment; wfapi SUCCESS does not overwrite server FAILURE
+ok 26 - server tree provides Test containment; wfapi SUCCESS does not overwrite server FAILURE
+  ---
+  duration_ms: 0.530942
+  type: 'test'
+  ...
+# Subtest: server timings are preserved, not summed and not recomputed from wfapi
+ok 27 - server timings are preserved, not summed and not recomputed from wfapi
+  ---
+  duration_ms: 0.218492
+  type: 'test'
+  ...
+# Subtest: no synthetic Checks or Migrations are inserted
+ok 28 - no synthetic Checks or Migrations are inserted
+  ---
+  duration_ms: 0.267534
+  type: 'test'
+  ...
+# Subtest: exact IDs, not stage names, determine optional wfapi details matching
+ok 29 - exact IDs, not stage names, determine optional wfapi details matching
+  ---
+  duration_ms: 0.191522
+  type: 'test'
+  ...
+# Subtest: string IDs are normalized consistently for selection and collapse
+ok 30 - string IDs are normalized consistently for selection and collapse
+  ---
+  duration_ms: 1.000103
+  type: 'test'
+  ...
+# Subtest: upstream collapsed badge aggregates descendant failure even when parent state is success
+ok 31 - upstream collapsed badge aggregates descendant failure even when parent state is success
+  ---
+  duration_ms: 0.201907
+  type: 'test'
+  ...
+# Subtest: duplicate IDs, unknown node types and legacy nextSibling are rejected
+ok 32 - duplicate IDs, unknown node types and legacy nextSibling are rejected
+  ---
+  duration_ms: 0.58395
+  type: 'test'
+  ...
+# Subtest: malformed tree envelope cannot silently become a flat successful graph
+ok 33 - malformed tree envelope cannot silently become a flat successful graph
+  ---
+  duration_ms: 0.354122
+  type: 'test'
+  ...
+# Subtest: tree structure budget is enforced
+ok 34 - tree structure budget is enforced
+  ---
+  duration_ms: 0.513476
+  type: 'test'
+  ...
+# Subtest: raw wfapi duplicate IDs are rejected
+ok 35 - raw wfapi duplicate IDs are rejected
+  ---
+  duration_ms: 0.270418
+  type: 'test'
+  ...
+# Subtest: unknown statuses remain unknown, skips are not failures
+ok 36 - unknown statuses remain unknown, skips are not failures
+  ---
+  duration_ms: 0.075211
+  type: 'test'
+  ...
+# Subtest: server URL is ignored, native node link remains job-local
+ok 37 - server URL is ignored, native node link remains job-local
+  ---
+  duration_ms: 0.150782
+  type: 'test'
+  ...
+# Subtest: null duration and complete=false are preserved for live server trees
+ok 38 - null duration and complete=false are preserved for live server trees
+  ---
+  duration_ms: 0.156881
+  type: 'test'
+  ...
+# Subtest: empty graphs and empty wfapi runs do not invent future nodes
+ok 39 - empty graphs and empty wfapi runs do not invent future nodes
+  ---
+  duration_ms: 0.260413
+  type: 'test'
+  ...
+# Subtest: nested renderer displays verified parallel branches with finite coordinates
+ok 40 - nested renderer displays verified parallel branches with finite coordinates
+  ---
+  duration_ms: 1.402575
+  type: 'test'
+  ...
+# Subtest: Jenkins context prefix and encoded branch slash are preserved
+ok 41 - Jenkins context prefix and encoded branch slash are preserved
+  ---
+  duration_ms: 0.360431
+  type: 'test'
+  ...
+# Subtest: numeric-looking branch is not mistaken for build number
+ok 42 - numeric-looking branch is not mistaken for build number
+  ---
+  duration_ms: 0.160917
+  type: 'test'
+  ...
+# Subtest: non-job, non-http and external/sibling links are rejected
+ok 43 - non-job, non-http and external/sibling links are rejected
+  ---
+  duration_ms: 0.369494
+  type: 'test'
+  ...
+# Subtest: milliseconds are not rounded into seconds
+ok 44 - milliseconds are not rounded into seconds
+  ---
+  duration_ms: 0.101279
+  type: 'test'
+  ...
+# Subtest: release manifest requests only activeTab, scripting and local storage
+ok 45 - release manifest requests only activeTab, scripting and local storage
+  ---
+  duration_ms: 2.045061
+  type: 'test'
+  ...
+# Subtest: API reads use GET, current session, no cache and no redirects
+ok 46 - API reads use GET, current session, no cache and no redirects
+  ---
+  duration_ms: 28.387932
+  type: 'test'
+  ...
+# Subtest: 403 is reported clearly
+ok 47 - 403 is reported clearly
+  ---
+  duration_ms: 0.997579
+  type: 'test'
+  ...
+# Subtest: login HTML is rejected
+ok 48 - login HTML is rejected
+  ---
+  duration_ms: 0.473057
+  type: 'test'
+  ...
+# Subtest: malformed JSON is rejected
+ok 49 - malformed JSON is rejected
+  ---
+  duration_ms: 0.723425
+  type: 'test'
+  ...
+# Subtest: response size limit stops oversized reads
+ok 50 - response size limit stops oversized reads
+  ---
+  duration_ms: 0.78753
+  type: 'test'
+  ...
+# Subtest: log display limit is surfaced, not silently discarded
+ok 51 - log display limit is surfaced, not silently discarded
+  ---
+  duration_ms: 2.183976
+  type: 'test'
+  ...
+# Subtest: step details reject a mismatched node ID
+ok 52 - step details reject a mismatched node ID
+  ---
+  duration_ms: 0.613704
+  type: 'test'
+  ...
+# Subtest: toolbar injects only into the explicitly clicked Jenkins tab
+ok 53 - toolbar injects only into the explicitly clicked Jenkins tab
+  ---
+  duration_ms: 1.366823
+  type: 'test'
+  ...
+# Subtest: toolbar does not inject on non-job pages
+ok 54 - toolbar does not inject on non-job pages
+  ---
+  duration_ms: 0.912584
+  type: 'test'
+  ...
+# Subtest: Firefox executeScript error results are not mistaken for success
+ok 55 - Firefox executeScript error results are not mistaken for success
+  ---
+  duration_ms: 2.386574
+  type: 'test'
+  ...
+# Subtest: installed payload does not contain the supplied shell commands or preview fixture
+ok 56 - installed payload does not contain the supplied shell commands or preview fixture
+  ---
+  duration_ms: 1.719562
+  type: 'test'
+  ...
+# Subtest: tree endpoint is GET-only, same-origin and build-scoped
+ok 57 - tree endpoint is GET-only, same-origin and build-scoped
+  ---
+  duration_ms: 0.652531
+  type: 'test'
+  ...
+# Subtest: only a tree HTTP 404 becomes capability-unavailable; 403 remains an error
+ok 58 - only a tree HTTP 404 becomes capability-unavailable; 403 remains an error
+  ---
+  duration_ms: 0.84234
+  type: 'test'
+  ...
+# Subtest: mutation endpoints and arbitrary URLs remain blocked after adding tree support
+ok 59 - mutation endpoints and arbitrary URLs remain blocked after adding tree support
+  ---
+  duration_ms: 0.394981
+  type: 'test'
+  ...
+# Subtest: installed bundle contains no BUS_PROFILE or local grouping editor
+ok 60 - installed bundle contains no BUS_PROFILE or local grouping editor
+  ---
+  duration_ms: 0.731598
+  type: 'test'
+  ...
+# Subtest: HTML fetch is GET-only, build-scoped and uses the same authenticated session
+ok 61 - HTML fetch is GET-only, build-scoped and uses the same authenticated session
+  ---
+  duration_ms: 0.391757
+  type: 'test'
+  ...
+# Subtest: HTML API keeps permission failures distinct and rejects non-HTML
+ok 62 - HTML API keeps permission failures distinct and rejects non-HTML
+  ---
+  duration_ms: 0.474959
+  type: 'test'
+  ...
+# Subtest: adding HTML support does not permit Replay, Run, config, cross-job or query endpoints
+ok 63 - adding HTML support does not permit Replay, Run, config, cross-job or query endpoints
+  ---
+  duration_ms: 0.26452
+  type: 'test'
+  ...
+1..63
+# tests 63
+# suites 0
+# pass 63
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 123.767225

@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "passed": false,
+  "reason": "Managed browser navigation to local HTTP returned net::ERR_BLOCKED_BY_ADMINISTRATOR before page load.",
+  "scope": "Loopback demo only; UI integration and parser checks use mock fetch/storage.",
+  "live_jenkins_test": false,
+  "native_firefox_test": false
+}
