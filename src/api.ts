@@ -1,5 +1,6 @@
 import { WfRun, WfNode, validateRun } from './model.ts';
-export interface JenkinsLocation {origin:string; jobPath:string; build?:string; runPath?:string; label:string;}
+import {BUILD_FIELDS,OVERVIEW_TREE,normalizeOverview,normalizeBuild} from './overview.ts';
+export interface JenkinsLocation {origin:string; jobPath:string; build?:string; runPath?:string; label:string;isJobPage?:boolean;}
 export function parseLocation(href:string):JenkinsLocation {
   const u=new URL(href);
   if(!['http:','https:'].includes(u.protocol))throw new Error('Open a Jenkins job or build page over HTTP(S), then click the extension.');
@@ -10,7 +11,7 @@ export function parseLocation(href:string):JenkinsLocation {
   const tail=(m[3]||'').split('/')[0];
   const build=/^(\d+|last(?:Build|SuccessfulBuild|CompletedBuild|FailedBuild|StableBuild|UnstableBuild|UnsuccessfulBuild))$/.test(tail)?tail:undefined;
   let label=m[2].split('/job/').filter(Boolean).map(x=>{try{return decodeURIComponent(x);}catch{return x;}}).join(' / ');
-  return {origin:u.origin,jobPath,build,runPath:build?jobPath+build+'/':undefined,label};
+  return {origin:u.origin,jobPath,build,runPath:build?jobPath+build+'/':undefined,label,isJobPage:u.pathname===jobPath||u.pathname===jobPath.slice(0,-1)};
 }
 export function safeJobUrl(href:string, location:JenkinsLocation):string {
   if(typeof href!=='string' || !href)throw new Error('Missing Jenkins link.');
@@ -28,7 +29,13 @@ export class JenkinsApi {
   private endpoint(path:string):string {
     const href=safeJobUrl(path,this.location),u=new URL(href);
     const suffix=u.pathname.slice(this.location.jobPath.length);
-    // No Jenkins mutation endpoints, arbitrary same-origin fetches, queries or fragments.
+    // Only these two fixed Remote API queries are allowed; callers cannot request
+    // parameters, environment variables, credentials, arbitrary depth or script actions.
+    if(!u.hash && /^(?:api\/json|[1-9]\d*\/api\/json)$/.test(suffix)){
+      const fields=suffix==='api/json'?OVERVIEW_TREE:BUILD_FIELDS;
+      if([...u.searchParams].length===1 && u.searchParams.get('tree')===fields)return href;
+    }
+    // No Jenkins mutation endpoints, arbitrary same-origin fetches or other queries.
     if(u.search || u.hash || !/^(?:wfapi\/runs|(?:\d+|last(?:Build|SuccessfulBuild|CompletedBuild|FailedBuild|StableBuild|UnstableBuild|UnsuccessfulBuild))\/wfapi\/describe|\d+\/execution\/node\/\d+\/wfapi\/(?:describe|log)|\d+\/stages\/tree|\d+\/flowGraphTable)\/?$/.test(suffix))
       throw new Error('Blocked an unexpected API endpoint.');
     return href;
@@ -62,6 +69,13 @@ export class JenkinsApi {
     const text=await this.read(path,'json',signal,maxBytes);
     try{return JSON.parse(text);}catch{throw new Error('Jenkins returned invalid JSON.');}
   }
+  async overview(signal?:AbortSignal){
+    return normalizeOverview(await this.json(this.location.jobPath+'api/json?tree='+encodeURIComponent(OVERVIEW_TREE),signal),this.location);
+  }
+  async buildOverview(number:number,signal?:AbortSignal){
+    if(!Number.isSafeInteger(number)||number<1)throw new Error('Invalid build number.');
+    return normalizeBuild(await this.json(this.location.jobPath+number+'/api/json?tree='+encodeURIComponent(BUILD_FIELDS),signal),this.location,number);
+  }
   async flowGraphTable(run:WfRun,signal?:AbortSignal):Promise<string> {
     return this.read(this.runPath(run)+'flowGraphTable/','html',signal);
   }
@@ -76,7 +90,9 @@ export class JenkinsApi {
   }
   async describe(build:string,signal?:AbortSignal):Promise<WfRun> {
     if(!/^(\d+|last(?:Build|SuccessfulBuild|CompletedBuild|FailedBuild|StableBuild|UnstableBuild|UnsuccessfulBuild))$/.test(build))throw new Error('Invalid build identifier.');
-    return validateRun(await this.json(this.location.jobPath+build+'/wfapi/describe',signal));
+    const run=validateRun(await this.json(this.location.jobPath+build+'/wfapi/describe',signal));
+    if(/^\d+$/.test(build)&&run.id!==build)throw new Error('Unexpected wfapi build identity.');
+    return run;
   }
   async stage(run:WfRun,node:WfNode,signal?:AbortSignal):Promise<WfNode> {
     const data=await this.json(this.runPath(run)+'execution/node/'+encodeURIComponent(node.id)+'/wfapi/describe',signal);

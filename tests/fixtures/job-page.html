@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- Reduced structural fixture from a Jenkins 2.516.3 WorkflowJob page.
+     Names/hosts are fictional; scripts, account UI, crumbs and chart internals omitted. -->
+<html><head><meta charset="utf-8"><style>
+body{margin:0;font:14px system-ui;color:#172b4d;background:white}
+#page-body{display:grid;grid-template-columns:200px minmax(0,1fr);gap:20px;padding:24px}
+#main-panel{min-width:0}#tasks .task{margin:8px 0}#tasks a{display:block;padding:8px;color:inherit;text-decoration:none}
+#buildHistoryPage{border:1px solid #ddd;margin-top:20px;padding:8px}#main-panel h1{font-size:24px}
+#trend-widget{width:500px;height:220px}#main-panel table{font-size:12px}.cbwf-stage-view{clear:both;padding:20px;border:1px dashed #bbb}
+@media(max-width:720px){#page-body{grid-template-columns:minmax(0,1fr);padding:10px}#side-panel{display:none}}
+</style></head><body data-model-type="org.jenkinsci.plugins.workflow.job.WorkflowJob">
+<div id="page-body" class="app-page-body app-page-body--two-column clear">
+  <div id="side-panel" class="app-page-body__sidebar"><div id="tasks">
+    <div class="task"><a class="task-link task-link--active" href="/job/example-service/job/feature-release/">Status</a></div>
+    <div class="task"><a class="task-link" href="/job/example-service/job/feature-release/changes">Changes</a></div>
+    <div class="task"><a class="task-link" data-task-post="true" href="/job/example-service/job/feature-release/build?delay=0sec">Build Now</a></div>
+  </div><div id="buildHistoryPage"><div id="jenkins-builds" class="jenkins-card">Original build history</div></div></div>
+  <div id="main-panel"><a id="skip2content"></a>
+    <div class="jenkins-app-bar"><div class="jenkins-app-bar__content jenkins-build-caption"><h1>feature-release</h1></div></div>
+    <div id="description" class="jenkins-!-margin-bottom-3"></div>
+    <div id="trend-widget" style="float:right"><div class="test-trend-caption">Test Result Trend</div><div align="right"><div class="echarts-trend graph-cursor-pointer" tool="test">Original test chart</div></div></div>
+    <table id="native-artifacts" style="margin-top:1em;margin-left:1em"><tbody><tr class="app-summary"><td><a href="/job/example-service/job/feature-release/4/artifact/">Last Successful Artifacts</a><table class="fileList"><tbody><tr><td>openapi.tar.gz</td></tr></tbody></table></td></tr></tbody></table>
+    <div class="cbwf-stage-view">Original Stage View</div>
+    <table id="native-tests"><tbody><tr class="app-summary"><td><a href="lastCompletedBuild/testReport/">Latest Test Result</a></td></tr></tbody></table>
+    <h2 class="permalinks-header">Permalinks</h2><ul class="permalinks-list"><li><a href="lastBuild/">Last build (#4)</a></li></ul>
+    <div id="other-plugin">Unrelated plugin content</div>
+  </div>
+</div></body></html>

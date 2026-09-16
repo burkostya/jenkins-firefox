@@ -1,0 +1,44 @@
+.pgvx-heading {min-width:0;flex:1;}
+.pgvx-heading h2 {overflow-wrap:anywhere;}
+.pgvx-overview {display:grid;grid-template-columns:minmax(170px,.8fr) minmax(220px,1.15fr) minmax(260px,1.3fr);gap:14px;padding:16px 18px;border-bottom:1px solid var(--line);}
+.pgvx-card {min-width:0;border:1px solid var(--line);border-radius:9px;padding:14px;background:var(--card-background);}
+.pgvx-card header {display:flex;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.pgvx-card header>span,.pgvx-card header>a,.pgvx-card h3 small {font-size:11px;color:var(--text-color-secondary);white-space:nowrap;}
+.pgvx-card header>a {color:var(--accent);}
+.pgvx-card h3 small {margin-left:6px;font-weight:500;}
+.pgvx-builds input {width:100%;min-width:0;padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:var(--surface);color:var(--text-color);font-size:12px;}
+.pgvx-build-list {max-height:205px;overflow:auto;margin:7px -5px 0;}
+.pgvx-build-row {display:flex;align-items:center;gap:8px;width:100%;padding:7px 6px;border:1px solid transparent;text-align:left;}
+.pgvx-build-row>svg {width:18px;height:18px;flex-shrink:0;}
+.pgvx-build-row small {display:block;font-size:10px;color:var(--text-color-secondary);}
+.pgvx-build-row b {font-size:12px;}
+.pgvx-build-row.is-selected {background:var(--surface);border-color:var(--accent);}
+.pgvx-build-time {margin-left:auto;text-align:right;font-size:11px;white-space:nowrap;}
+.pgvx-last-success {margin-top:10px;font-size:11px;min-height:27px;width:100%;}
+.pgvx-artifact-list {list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;}
+.pgvx-artifact-list li {padding:10px 0;border-top:1px solid var(--line);overflow-wrap:anywhere;}
+.pgvx-artifact-list li:first-child {border-top:0;padding-top:2px;}
+.pgvx-artifact-list small {display:block;color:var(--text-color-secondary);font-size:11px;margin-top:4px;}
+.pgvx-test-total {display:flex;align-items:baseline;gap:9px;margin-bottom:10px;}
+.pgvx-test-total strong {font-size:30px;line-height:1.15;letter-spacing:-1px;}
+.pgvx-test-total>span {color:var(--text-color-secondary);font-size:12px;}
+.pgvx-test-counts {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pgvx-test-counts span {font-size:11px;}
+.pgvx-test-counts b {display:block;font-size:17px;font-variant-numeric:tabular-nums;}
+.pgvx-passed {color:var(--success);}.pgvx-failed {color:var(--error);}.pgvx-skipped {color:var(--text-color-secondary);}
+.pgvx-test-history {margin-top:16px;padding-top:10px;border-top:1px solid var(--line);}
+.pgvx-test-history h4 {margin:0 0 8px;font-size:12px;font-weight:600;}
+.pgvx-test-history h4 small {font-size:10px;font-weight:400;color:var(--text-color-secondary);margin-left:6px;}
+.pgvx-trend {display:flex;gap:5px;overflow-x:auto;padding:3px 2px;}
+.pgvx-trend-build {display:flex;flex:1 0 26px;max-width:70px;flex-direction:column;align-items:center;padding:3px 3px;border-color:transparent;border-radius:4px;}
+.pgvx-trend-build.is-selected {border-color:var(--accent);background:var(--surface);}
+.pgvx-trend-build small {font-size:10px;}
+.pgvx-trend-column {display:flex;align-items:flex-end;justify-content:center;height:48px;width:100%;margin-bottom:3px;}
+.pgvx-trend-stack {display:flex;flex-direction:column;width:65%;border-radius:3px;overflow:hidden;}
+.pgvx-trend-stack i {display:block;min-height:0;}
+.pgvx-trend-pass {background:var(--success);}.pgvx-trend-fail {background:var(--error);}.pgvx-trend-skip {background:var(--text-color-secondary);}
+.pgvx-no-report {font-size:12px;color:var(--text-color-secondary);}
+.pgvx-trend-key {font-size:10px;line-height:1.4;margin-top:5px;}
+.pgvx-overview-error {grid-column:1/-1;}
+@media (max-width:1100px){.pgvx-overview {grid-template-columns:minmax(160px,.8fr) minmax(210px,1fr);}.pgvx-tests {grid-column:1/-1;}.pgvx-tests .pgvx-test-history{margin-top:12px;}}
+@media (max-width:720px){.pgvx-overview{grid-template-columns:minmax(0,1fr);padding:12px;gap:10px;}.pgvx-tests{grid-column:auto;}.pgvx-runbar{align-items:flex-start;}.pgvx-header{padding:14px;}.pgvx-build-list{max-height:155px;}}

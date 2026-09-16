@@ -3,6 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const ts=require('./tools/typescript.cjs');
 const ROOT=__dirname;
+const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'package.json'),'utf8')).version;
 const aliases={
   react:'runtime/react.cjs','react-dom':'runtime/react-dom.cjs','react-dom/client':'runtime/react-dom.cjs',
   'react/jsx-runtime':'runtime/jsx-runtime.cjs','react-zoom-pan-pinch':'src/compat/zoom-context.ts'
@@ -65,7 +66,7 @@ function bundle(entry,output,asModule=false){
     modules.set(id,code);
   }
   add(entry);
-  const header='/* Pipeline Graph Local 0.3.0. Upstream tag 1013.v9f83fd83c063, MIT. React MIT. See LICENSES. */\n';
+  const header='/* Pipeline Graph Local '+VERSION+'. Upstream tag 1013.v9f83fd83c063, MIT. React MIT. See LICENSES. */\n';
   let code=header+'(()=>{\n"use strict";\nconst modules={\n'+[...modules].map(([id,body])=>JSON.stringify(id)+':function(module,exports,require){\n'+body+'\n}').join(',\n')+'\n};\nconst cache=Object.create(null);\nfunction require(id){if(cache[id])return cache[id].exports;const module=cache[id]={exports:{}};if(!modules[id])throw new Error("Missing module: "+id);modules[id](module,module.exports,require);return module.exports;}\n';
   code+=(asModule?'module.exports = ':'')+'require('+JSON.stringify(entry)+');\n})();\n';
   fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,code);
@@ -77,9 +78,10 @@ for(const [file,want]of Object.entries(manifest.files)){
   const got=crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT,file))).digest('hex');
   if(got!==want)throw new Error('Vendored source differs from recorded hash: '+file);
 }
+fs.rmSync(path.join(ROOT,'extension'),{recursive:true,force:true});
 fs.mkdirSync(path.join(ROOT,'extension'),{recursive:true});
 const result=bundle('src/content.tsx',path.join(ROOT,'extension/content.js'));
-for(const file of ['manifest.json','icon.svg','README.md','NOTICE.md','LICENSE','TEST-REPORT.md'])fs.copyFileSync(path.join(ROOT,file),path.join(ROOT,'extension',file));
+for(const file of ['manifest.json','icon.svg','README.md','NOTICE.md','LICENSE'])fs.copyFileSync(path.join(ROOT,file),path.join(ROOT,'extension',file));
 fs.copyFileSync(path.join(ROOT,'src/background.js'),path.join(ROOT,'extension/background.js'));
 fs.cpSync(path.join(ROOT,'licenses'),path.join(ROOT,'extension/LICENSES'),{recursive:true});
 // Build pure adapter / layout modules for Node tests, with the same compiler and patches.

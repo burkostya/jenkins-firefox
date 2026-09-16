@@ -1,0 +1,8 @@
+# Rebuild from source; CI distributes the extension as an artifact.
+/extension/
+/tests/lib.cjs
+/tests/browser-bundle.js
+/BUILD-REPORT.json
+/test-results/
+__pycache__/
+node_modules/

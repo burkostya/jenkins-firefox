@@ -10,6 +10,8 @@ import {WfRun,WfNode,NodeMeta,Adapted,adaptFlatRun,adaptTree,isActive,status,for
 import {JenkinsApi,JenkinsLocation,safeJobUrl} from './api.ts';
 import {adaptFlowGraphHtml} from './flow-table.ts';
 import {readSetting,writeSetting} from './storage.ts';
+import {JobOverview} from './JobOverview.tsx';
+import type {JobOverview as Job,BuildOverview} from './overview.ts';
 
 function errorText(e:unknown){return e instanceof Error?e.message:String(e);}
 function stageTime(s:StageInfo){return (s as any).pgvxDurationLabel??formatMs(s.totalDurationMillis);}
@@ -19,15 +21,20 @@ export class ErrorBoundary extends Component<any,{error:string}> {
   state={error:''};static getDerivedStateFromError(e:unknown){return {error:errorText(e)};}
   render(){return this.state.error?<section className="pgvx-error" role="alert"><b>Unable to render the local graph.</b><p>{this.state.error}</p><button onClick={this.props.onClose}>Restore Jenkins view</button></section>:this.props.children;}
 }
-interface Props {classicLabel?:string;location:JenkinsLocation;portal:HTMLElement;onClassic:(show:boolean)=>void;onClose:()=>void;host:HTMLElement;}
+interface Props {overviewEnabled?:boolean;onOverview?:(show:boolean)=>void;classicLabel?:string;location:JenkinsLocation;portal:HTMLElement;onClassic:(show:boolean)=>void;onClose:()=>void;host:HTMLElement;}
 export default function App(props:Props){
   const key='pgvx/v2/'+props.location.origin+props.location.jobPath;
   return <TooltipRoot.Provider value={props.portal}><UserPreferencesProvider storageKey={key+'/preferences'}><Main {...props} settingsKey={key}/></UserPreferencesProvider></TooltipRoot.Provider>;
 }
-function Main({location,portal,onClassic,onClose,host,settingsKey,classicLabel='Original Stage View'}:Props&{settingsKey:string}){
+function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnabled=false,onOverview,classicLabel='Original Stage View'}:Props&{settingsKey:string}){
   const api=useMemo(()=>new JenkinsApi(location),[location]);
-  const [runs,setRuns]=useState<WfRun[]>([]),[run,setRun]=useState<WfRun|null>(null);
+  const [runs,setRuns]=useState<WfRun[]>([]),[runData,setRun]=useState<WfRun|null>(null);
+  const [overview,setOverview]=useState<Job|null>(null),[metadata,setMetadata]=useState<BuildOverview|null>(null),[overviewError,setOverviewError]=useState('');
+  const [loadedChoice,setLoadedChoice]=useState<string|null>(null);
   const [choice,setChoice]=useState(location.build||'latest'),[refresh,setRefresh]=useState(0),[auto,setAuto]=useState(true);
+  const run=loadedChoice===choice?runData:null;
+  const buildMeta=loadedChoice===choice?metadata:null;
+  const choose=(value:string)=>{setChoice(value);setSelectedId(undefined);};
   const [loading,setLoading]=useState(true),[error,setError]=useState(''),[updated,setUpdated]=useState('');
   const [tree,setTree]=useState<{runId:string;data:Adapted}|null>(null),[treeNote,setTreeNote]=useState('');
   const [classic,setClassic]=useState(false);
@@ -36,6 +43,7 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,classicLabel='
   useEffect(()=>{let dead=false;readSetting(settingsKey+'/theme','').then(v=>{if(!dead&&(v==='dark'||v==='light'))setTheme(v);});return()=>{dead=true;};},[settingsKey]);
   useEffect(()=>{host.dataset.theme=theme;},[theme]);
   useEffect(()=>{onClassic(classic);},[classic,onClassic]);
+  useEffect(()=>{onOverview?.(!!overview&&!classic);},[overview,classic,onOverview]);
   useEffect(()=>{const fn=()=>{setClassic(false);host.scrollIntoView({behavior:'smooth',block:'start'});};host.addEventListener('pgvx-activate',fn);return()=>host.removeEventListener('pgvx-activate',fn);},[host]);
   useEffect(()=>{
     if(classic)return;
@@ -45,12 +53,24 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,classicLabel='
     async function tick(){
       if(document.hidden){timer=setTimeout(tick,5000);return;}
       try{
-        let list:WfRun[]=[];
-        try{list=await api.runs(ctrl.signal);}catch(e){if(choice==='latest')throw e;}
-        const wanted=choice==='latest'?list[0]?.id:choice;
-        const current=wanted?(list.find(r=>r.id===wanted)??await api.describe(wanted,ctrl.signal)):null;
+        const [runResult,overviewResult]=await Promise.allSettled([
+          api.runs(ctrl.signal),overviewEnabled?api.overview(ctrl.signal):Promise.resolve(null)
+        ]);
         if(stopped)return;
-        setRuns(list);setRun(current);setError('');setUpdated(new Date().toLocaleTimeString());
+        const job=overviewResult.status==='fulfilled'?overviewResult.value:null;
+        let metaError=overviewResult.status==='rejected'?'Job overview unavailable: '+errorText(overviewResult.reason):'';
+        const list=runResult.status==='fulfilled'?[...runResult.value].sort((a,b)=>Number(b.id)-Number(a.id)):[];
+        const wanted=choice==='latest'?(job?.lastBuild?.toString()||job?.builds[0]?.number.toString()||list[0]?.id):choice;
+        let current:WfRun|null=null,selectedMeta:BuildOverview|null=null,graphError='';
+        if(wanted){
+          try{current=list.find(r=>r.id===wanted)??await api.describe(wanted,ctrl.signal);}
+          catch(e){if(ctrl.signal.aborted)throw e;graphError='Graph unavailable for this build: '+errorText(e);}
+          const number=Number(current?.id||wanted);
+          if(overviewEnabled&&Number.isSafeInteger(number)&&number>0){
+            try{selectedMeta=job?.builds.find(b=>b.number===number)??await api.buildOverview(number,ctrl.signal);}
+            catch(e){if(ctrl.signal.aborted)throw e;metaError=metaError||'Selected build metadata unavailable: '+errorText(e);}
+          }
+        }else if(runResult.status==='rejected'&&!job)graphError=errorText(runResult.reason);
         let result:Adapted|null=null, note='';
         if(current){
           try {
@@ -68,15 +88,20 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,classicLabel='
           }
         }
         if(stopped)return;
+        // Publish one snapshot after all reads. No previous build's cards/graph can
+        // appear under the new choice, even when a cancelled fetch resolves late.
+        setRuns(list);setRun(current);setOverview(job);setMetadata(selectedMeta);
+        setOverviewError(metaError);setLoadedChoice(choice);setError(graphError);
         setTree(result&&current?{runId:current.id,data:result}:null);setTreeNote(note);
-        if(auto&&(choice==='latest'||current&&(isActive(current.status)||result?.complete===false)))
+        setUpdated(new Date().toLocaleTimeString());
+        if(auto&&(choice==='latest'||selectedMeta?.building||current&&(isActive(current.status)||result?.complete===false)))
           timer=setTimeout(tick,current&&(isActive(current.status)||result?.complete===false)?(result?.source==='flow-graph-table'?15000:5000):15000);
       }catch(e){if(!stopped&&!ctrl.signal.aborted)setError(errorText(e));}
       finally{if(!stopped)setLoading(false);}
     }
     void tick();
     return()=>{stopped=true;ctrl.abort();if(timer)clearTimeout(timer);};
-  },[api,choice,refresh,auto,classic,settingsKey]);
+  },[api,choice,refresh,auto,classic,settingsKey,overviewEnabled]);
   useEffect(()=>{setSelectedId(undefined);},[run?.id]);
   const adapted=useMemo<Adapted>(()=>run?(tree?.runId===run.id?tree.data:adaptFlatRun(run,api.runPath(run))):{stages:[],meta:new Map(),warnings:[],source:'wfapi'},[run,tree,api]);
   const hasTopology=adapted.source!=='wfapi';
@@ -102,27 +127,35 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,classicLabel='
   const effective=useMemo(()=>collapseSelectiveStages(adapted.stages,collapsed),[adapted.stages,collapsed]);
   const parents=useMemo(()=>collectParentStageIds(adapted.stages),[adapted]);
   const mergedRuns=run&&!runs.some(r=>r.id===run.id)?[run,...runs]:runs;
+  const options=new Map(mergedRuns.map(r=>[r.id,{id:r.id,name:r.name||'#'+r.id,status:r.status}]));
+  for(const b of overview?.builds||[])options.set(String(b.number),{id:String(b.number),name:'#'+b.number,status:b.result});
+  if(buildMeta)options.set(String(buildMeta.number),{id:String(buildMeta.number),name:'#'+buildMeta.number,status:buildMeta.result});
+  const buildOptions=[...options.values()].sort((a,b)=>Number(b.id)-Number(a.id));
   return <div className="pgvx-app" data-theme={theme}>
     <header className="pgvx-header">
-      <div className="pgvx-heading"><h2>Pipeline Graph <span className="pgvx-local">LOCAL</span></h2><div className="pgvx-subtitle">{location.label}</div></div>
+      <div className="pgvx-heading"><h2>{overview?overview.name:'Pipeline Graph'} <span className="pgvx-local">LOCAL</span></h2><div className="pgvx-subtitle">{location.label}</div></div>
       <div className="pgvx-actions">
         <button title="Toggle light / dark theme" onClick={()=>{const next=theme==='light'?'dark':'light';setTheme(next);void writeSetting(settingsKey+'/theme',next);}}>{theme==='light'?'Dark':'Light'}</button>
-        <button onClick={()=>setClassic(!classic)}>{classic?'Graph view':classicLabel}</button>
+        <button onClick={()=>setClassic(!classic)}>{classic?'Graph view':overview?'Original Jenkins page':classicLabel}</button>
         <button className="pgvx-icon-button" aria-label="Close local graph" title="Close local graph" onClick={onClose}>&#x2715;</button>
       </div>
     </header>
     {!classic&&<>
       <div className="pgvx-runbar">
-        <label className="pgvx-run-select">Build <select value={choice} onChange={e=>{setChoice(e.target.value);setSelectedId(undefined);}}>
+        <label className="pgvx-run-select">Build <select value={choice} onChange={e=>choose(e.target.value)}>
           <option value="latest">Latest build</option>
-          {mergedRuns.map(r=><option key={r.id} value={r.id}>{r.name||'#'+r.id} - {r.status}</option>)}
-          {location.build&&!mergedRuns.some(r=>r.id===location.build)&&<option value={location.build}>{location.build}</option>}
+          {buildOptions.map(r=><option key={r.id} value={r.id}>{r.name||'#'+r.id} - {r.status}</option>)}
+          {choice!=='latest'&&choice!==location.build&&!buildOptions.some(r=>r.id===choice)&&<option value={choice}>#{choice}</option>}
+          {location.build&&!buildOptions.some(r=>r.id===location.build)&&<option value={location.build}>{location.build}</option>}
         </select></label>
-        {run&&<div className="pgvx-run-summary"><StatusIcon status={status(run.status)}/><b>{run.name||'#'+run.id}</b><span>{run.status}</span><span className="pgvx-divider"/><span>{formatMs(run.durationMillis)}</span><span className="pgvx-muted">{safeDate(run.startTimeMillis)}</span></div>}
-        <div className="pgvx-run-actions"><label><input type="checkbox" checked={auto} onChange={e=>setAuto(e.target.checked)}/> Auto-refresh</label><button disabled={loading} onClick={()=>setRefresh(x=>x+1)}>{loading?'Loading...':'Refresh'}</button>{run&&<a href={location.origin+api.runPath(run)+'console'} target="_blank" rel="noopener noreferrer">Console &#x2197;</a>}</div>
+        {buildMeta?<div className="pgvx-run-summary"><StatusIcon status={status(buildMeta.result)}/><b>#{buildMeta.number}</b><span>{buildMeta.result}</span><span className="pgvx-divider"/><span>{formatMs(buildMeta.duration)}</span><span className="pgvx-muted">{safeDate(buildMeta.timestamp)}</span></div>:run&&<div className="pgvx-run-summary"><StatusIcon status={status(run.status)}/><b>{run.name||'#'+run.id}</b><span>{run.status}</span><span className="pgvx-divider"/><span>{formatMs(run.durationMillis)}</span><span className="pgvx-muted">{safeDate(run.startTimeMillis)}</span></div>}
+        <div className="pgvx-run-actions"><label><input type="checkbox" checked={auto} onChange={e=>setAuto(e.target.checked)}/> Auto-refresh</label><button disabled={loading} onClick={()=>setRefresh(x=>x+1)}>{loading?'Loading...':'Refresh'}</button>{(buildMeta||run)&&<a href={(buildMeta?.url||location.origin+api.runPath(run!))+'console'} target="_blank" rel="noopener noreferrer">Console &#x2197;</a>}</div>
       </div>
+      {overviewEnabled&&overview&&<JobOverview job={overview} build={buildMeta} selected={String(buildMeta?.number||run?.id||(choice==='latest'?overview.lastBuild:choice)||'')} onSelect={choose} error={overviewError} loading={loading||loadedChoice!==choice}/>}
+      {overviewEnabled&&!overview&&overviewError&&<div className="pgvx-warning" role="status">{overviewError}. Native overview widgets remain available.</div>}
+      {loading&&!run&&<div className="pgvx-empty" role="status">Loading selected build...</div>}
       {error&&<div role="alert" className="pgvx-error">{error}</div>}
-      {!run&&!loading&&!error&&<div className="pgvx-empty">No runs were returned by wfapi/runs.</div>}
+      {!run&&!loading&&!error&&<div className="pgvx-empty">No pipeline stages available for this selection.</div>}
       {run&&<>
         <div className="pgvx-notice"><b>{fromHtml?'Source: Pipeline Steps HTML':hasTopology?'Source: Jenkins execution tree':'Source: wfapi / flat status list'}</b><br/>
           {fromHtml?'Hierarchy comes from this build\'s flowGraphTable, matched to wfapi by node ID. Container states are display aggregates; ~ marks HTML-rounded block durations. No local grouping rules.':hasTopology?'Grouping, branches, durations and node states come from this build\'s /stages/tree response. No local grouping rules are used.':'Hierarchy is unavailable: no parent-child relationship or execution dependency is inferred from names, timestamps or API order.'}
