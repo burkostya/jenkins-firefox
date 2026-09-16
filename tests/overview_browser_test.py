@@ -62,11 +62,11 @@ with sync_playwright() as p:
     ok('known widgets and native permalink footer replaced compactly; navigation and unknown plugin preserved')
     page.evaluate("""{
       const root=document.createElement('div');root.id='breadcrumb-popover';
-      root.innerHTML='<div class="jenkins-dropdown__split-container"><div id="duplicate-actions"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/changes">Changes</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/build">Build Now</a></div></div><div id="permalink-column"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastBuild/">Last build</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastSuccessfulBuild/">Last successful build</a></div></div></div>';
+      root.innerHTML='<div class="jenkins-dropdown__split-container"><div id="duplicate-actions"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/changes">Changes</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/build">Build Now</a></div></div><div id="permalink-column"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastBuild">Last build</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastSuccessfulBuild">Last successful build</a></div></div></div>';
       document.body.append(root);
     }""")
     expect(page.locator('#duplicate-actions')).to_be_hidden();expect(page.locator('#permalink-column')).to_be_visible()
-    ok('job breadcrumb dropdown hides duplicated actions but keeps permalink navigation')
+    ok('job breadcrumb dropdown matches Jenkins no-trailing-slash permalinks and hides duplicated actions')
     page.get_by_role('button',name='Actions for build #3').click()
     menu=page.get_by_role('menu',name='Actions for build #3')
     expect(menu).to_be_visible();expect(page.locator('.pgvx-run-summary')).to_contain_text('#4')
