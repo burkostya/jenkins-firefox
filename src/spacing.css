@@ -1,0 +1,53 @@
+:host {
+  --pgvx-gutter: 22px;
+}
+
+/* One spacing system for the flattened job page. Structural borders are full-bleed;
+   content receives the gutter, not the containing section. */
+.pgvx-overview {
+  padding-left: 0;
+  padding-right: 0;
+}
+.pgvx-card {
+  padding-left: var(--pgvx-gutter);
+  padding-right: var(--pgvx-gutter);
+}
+
+.pgvx-notice {
+  margin-left: var(--pgvx-gutter);
+  margin-right: var(--pgvx-gutter);
+  max-width: calc(100% - (var(--pgvx-gutter) * 2));
+}
+
+.pgvx-graph-title {
+  left: var(--pgvx-gutter);
+}
+.pgvx-fullscreen {
+  right: calc(var(--pgvx-gutter) - 7px);
+}
+.pgvx-viewport {
+  padding-left: var(--pgvx-gutter);
+  padding-right: var(--pgvx-gutter);
+}
+.pgvx-zoom-controls {
+  right: var(--pgvx-gutter);
+}
+
+.pgvx-tree {
+  padding: 16px var(--pgvx-gutter) 22px;
+}
+.pgvx-tree h3 {
+  padding-left: 0;
+  padding-right: 0;
+}
+.pgvx-details,
+.pgvx-flat {
+  padding-left: var(--pgvx-gutter);
+  padding-right: var(--pgvx-gutter);
+}
+
+@media (max-width: 800px) {
+  :host {
+    --pgvx-gutter: 12px;
+  }
+}
