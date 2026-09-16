@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node build.cjs",
-    "test": "node --test tests/model.test.cjs tests/security.test.cjs tests/flow-table.test.cjs tests/overview.test.cjs",
+    "test": "node --test tests/model.test.cjs tests/security.test.cjs tests/flow-table.test.cjs tests/overview.test.cjs tests/spacing.test.cjs",
     "test:browser": "python tests/browser_test.py",
     "preview": "python tools/preview.py",
     "test:flow-browser": "python tests/flow_browser_test.py",
