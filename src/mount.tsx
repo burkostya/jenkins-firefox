@@ -4,6 +4,7 @@ import {parseLocation,JenkinsLocation} from './api.ts';
 import shell from './shell.css';
 import upstream from './upstream.css';
 import overviewStyles from './overview.css';
+import spacingStyles from './spacing.css';
 import {createJobPageLayout} from './page-layout.ts';
 const ID='pipeline-graph-local-extension';
 export function mount(location:JenkinsLocation = parseLocation(window.location.href)){
@@ -23,7 +24,7 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   while(anchor && anchor.parentElement!==panel)anchor=anchor.parentElement;
   if(anchor && anchor!==panel)anchor.before(host);else panel.append(host);
   const shadow=host.attachShadow({mode:'open'});
-  const css=shell+'\n'+upstream+'\n'+overviewStyles;
+  const css=shell+'\n'+upstream+'\n'+overviewStyles+'\n'+spacingStyles;
   try { const sheet=new CSSStyleSheet();sheet.replaceSync(css);shadow.adoptedStyleSheets=[sheet]; }
   catch { const style=document.createElement('style');style.textContent=css;shadow.append(style); }
   const target=document.createElement('div'),portal=document.createElement('div');shadow.append(target,portal);

@@ -9,7 +9,7 @@ export function createJobPageLayout(panel:HTMLElement,host:HTMLElement,original:
   let enabled=false;
   const style=document.createElement('style');
   style.textContent=`
-    #page-body[data-pgvx-compact="true"] #main-panel { min-width:0; }
+    #page-body[data-pgvx-compact="true"] #main-panel { min-width:0; padding-left:0; }
     #page-body[data-pgvx-compact="true"] #side-panel { border-right:1px solid #e0e5eb; padding-right:12px; }
     #page-body[data-pgvx-compact="true"][data-pgvx-theme="dark"] #side-panel { border-right-color:#354053; }
     #page-body[data-pgvx-compact="true"] #tasks .task-link { min-height:30px; padding-top:5px; padding-bottom:5px; }
@@ -20,6 +20,10 @@ export function createJobPageLayout(panel:HTMLElement,host:HTMLElement,original:
     body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild"], > :last-child a[href$="lastBuild/"]) { grid-template-columns:auto; }
     body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild"], > :last-child a[href$="lastBuild/"]) > :first-child { display:none !important; }
     body:has(#page-body[data-pgvx-compact="true"]) .jenkins-dropdown__split-container:has(> :last-child a[href$="lastBuild"], > :last-child a[href$="lastBuild/"]) > :last-child { border-left:0; background:transparent; }
+    @media (max-width:800px) {
+      #page-body[data-pgvx-compact="true"] #main-panel { padding-left:var(--section-padding); }
+      #page-body[data-pgvx-compact="true"] #side-panel { border-right:0; padding-right:0; }
+    }
   `;
   function hide(el:HTMLElement){
     if(el===host||el===original||el.contains(host))return;
