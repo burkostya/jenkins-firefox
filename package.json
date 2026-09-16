@@ -1,6 +1,6 @@
 {
   "name": "pipeline-graph-local-firefox",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "Jenkins graph from server tree or Pipeline Steps HTML; read-only wfapi fallback. Based on Pipeline Graph View 1013.v9f83fd83c063.",
   "license": "MIT",
