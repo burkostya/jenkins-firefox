@@ -32,8 +32,14 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   const overviewEnabled=!!location.isJobPage && document.body.dataset.modelType==='org.jenkinsci.plugins.workflow.job.WorkflowJob';
   const layout=overviewEnabled?createJobPageLayout(panel as HTMLElement,host,original):null;
   const onOverview=(enabled:boolean)=>layout?.setEnabled(enabled);
+  function decorateProvenance(){
+    const notice=target.querySelector<HTMLElement>('.pgvx-notice');if(!notice)return;
+    const text=notice.textContent?.replace(/\s+/g,' ').trim()||'';
+    if(text&&notice.dataset.pgvxTooltipText!==text){notice.title=text;notice.setAttribute('aria-label',text);notice.dataset.pgvxTooltipText=text;}
+  }
+  const provenanceObserver=new MutationObserver(decorateProvenance);provenanceObserver.observe(target,{childList:true,subtree:true,characterData:true});
   let closed=false;const root=createRoot(target);
-  function close(){if(closed)return;closed=true;layout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
+  function close(){if(closed)return;closed=true;provenanceObserver.disconnect();layout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
   window.addEventListener('pagehide',close,{once:true});
   root.render(<ErrorBoundary onClose={close}><App overviewEnabled={overviewEnabled} onOverview={onOverview} classicLabel={original?.id==='nodeGraph'?'Original Pipeline Steps':'Original Stage View'} {...{location,portal,host}} onClassic={showClassic} onClose={close}/></ErrorBoundary>);
 }
