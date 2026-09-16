@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pipeline Graph Local for Jenkins",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Jenkins graph from server tree or Pipeline Steps HTML; read-only wfapi fallback. Based on Pipeline Graph View 1013.v9f83fd83c063.",
   "permissions": [
     "activeTab",
