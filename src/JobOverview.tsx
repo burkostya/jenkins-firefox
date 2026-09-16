@@ -1,9 +1,54 @@
-import {useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
+import {createPortal} from 'react-dom';
 import type {JobOverview as Job,BuildOverview} from './overview.ts';
+import {loadBuildMenu,type BuildMenuEntry} from './build-menu.ts';
 import {formatMs,status} from './model.ts';
 import StatusIcon from '../upstream/common/components/status-icon.tsx';
 interface Props {job:Job;build:BuildOverview|null;selected:string;onSelect:(choice:string)=>void;error:string;loading:boolean;}
 const count=(n:number)=>n.toLocaleString();
+
+function BuildActions({build}:{build:BuildOverview}){
+  const button=useRef<HTMLButtonElement>(null),menu=useRef<HTMLDivElement>(null);
+  const [open,setOpen]=useState(false),[items,setItems]=useState<BuildMenuEntry[]|null>(null),[error,setError]=useState('');
+  const [position,setPosition]=useState({left:0,top:0,up:false});
+  function place(){
+    const rect=button.current?.getBoundingClientRect();if(!rect)return;
+    const width=Math.min(280,Math.max(220,window.innerWidth-16));
+    setPosition({left:Math.max(8,Math.min(rect.right-width,window.innerWidth-width-8)),top:rect.top>window.innerHeight/2?rect.top-4:rect.bottom+4,up:rect.top>window.innerHeight/2});
+  }
+  useEffect(()=>{
+    if(!open||items!==null)return;
+    const ctrl=new AbortController();setError('');
+    loadBuildMenu(build.url,ctrl.signal).then(setItems).catch(e=>{if(!ctrl.signal.aborted)setError(e instanceof Error?e.message:String(e));});
+    return()=>ctrl.abort();
+  },[open,items,build.url]);
+  useEffect(()=>{
+    if(!open)return;
+    const root=button.current?.getRootNode();
+    const outside=(e:Event)=>{const target=e.target as Node;if(button.current?.contains(target)||menu.current?.contains(target))return;setOpen(false);};
+    const key=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);button.current?.focus();}};
+    const close=()=>setOpen(false);
+    root?.addEventListener('pointerdown',outside);window.addEventListener('keydown',key);window.addEventListener('resize',close);window.addEventListener('scroll',close,true);
+    return()=>{root?.removeEventListener('pointerdown',outside);window.removeEventListener('keydown',key);window.removeEventListener('resize',close);window.removeEventListener('scroll',close,true);};
+  },[open]);
+  const root=button.current?.getRootNode();
+  const popup=open&&root instanceof ShadowRoot?createPortal(<div ref={menu} className="pgvx-build-menu" role="menu" aria-label={'Actions for build #'+build.number}
+    style={{left:position.left,top:position.top,transform:position.up?'translateY(-100%)':undefined}}>
+      <strong className="pgvx-build-menu-title">Build #{build.number}</strong>
+      {items===null&&!error&&<span className="pgvx-build-menu-note">Loading actions...</span>}
+      {error&&<><span className="pgvx-build-menu-note">{error}</span><a role="menuitem" href={build.url} onClick={()=>setOpen(false)}>Open build</a></>}
+      {items?.map((item,i)=>item.kind==='separator'?<hr key={'s'+i}/>:item.kind==='header'?<span className="pgvx-build-menu-heading" key={'h'+i}>{item.label}</span>:
+        item.kind==='disabled'?<span className="pgvx-build-menu-disabled" aria-disabled="true" title={item.reason} key={'d'+i}>{item.label}<small>Original Jenkins page</small></span>:
+        <a role="menuitem" href={item.href} key={'a'+i} onClick={()=>setOpen(false)}>{item.label}</a>)}
+      {items!==null&&!error&&!items.some(i=>i.kind==='link')&&<><span className="pgvx-build-menu-note">No navigational actions reported.</span><a role="menuitem" href={build.url} onClick={()=>setOpen(false)}>Open build</a></>}
+    </div>,root):null;
+  return <div className="pgvx-build-actions">
+    <button ref={button} className="pgvx-build-menu-toggle" aria-label={'Actions for build #'+build.number} aria-haspopup="menu" aria-expanded={open}
+      title={'Build #'+build.number+' actions'} onClick={()=>{if(open)setOpen(false);else{place();setOpen(true);}}}>&#x2304;</button>
+    {popup}
+  </div>;
+}
+
 export function JobOverview({job,build,selected,onSelect,error,loading}:Props){
   const [filter,setFilter]=useState('');
   const latest=job.lastSuccessfulBuild;
@@ -13,11 +58,12 @@ export function JobOverview({job,build,selected,onSelect,error,loading}:Props){
       <header><h3>Recent builds</h3><span>{job.builds.length} / latest 20</span></header>
       <input type="search" aria-label="Filter builds" placeholder="Filter number or result" value={filter} onChange={e=>setFilter(e.target.value)}/>
       <div className="pgvx-build-list">{job.builds.filter(b=>('#'+b.number+' '+b.result).toLowerCase().includes(filter.toLowerCase())).map(b=>
-        <button key={b.number} className={'pgvx-build-row'+(String(b.number)===selected?' is-selected':'')}
-          aria-label={'Select build #'+b.number} aria-pressed={String(b.number)===selected} onClick={()=>onSelect(String(b.number))}>
-          <StatusIcon status={status(b.result)}/><span><b>#{b.number}</b><small>{b.result}</small></span>
-          <span className="pgvx-build-time">{formatMs(b.duration)}<small>{b.timestamp?new Date(b.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):''}</small></span>
-        </button>)}</div>
+        <div key={b.number} className={'pgvx-build-row'+(String(b.number)===selected?' is-selected':'')}>
+          <button className="pgvx-build-select" aria-label={'Select build #'+b.number} aria-pressed={String(b.number)===selected} onClick={()=>onSelect(String(b.number))}>
+            <StatusIcon status={status(b.result)}/><span><b>#{b.number}</b><small>{b.result}</small></span>
+            <span className="pgvx-build-time">{formatMs(b.duration)}<small>{b.timestamp?new Date(b.timestamp).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):''}</small></span>
+          </button><BuildActions build={b}/>
+        </div>)}</div>
       {!job.builds.length&&<p className="pgvx-muted">No builds yet</p>}
       {latest&&<button className="pgvx-last-success" onClick={()=>onSelect(String(latest))}>Select last successful #{latest}</button>}
     </section>

@@ -23,6 +23,16 @@ BOOT=r'''job=>{
     if(window.__defer&&!selected){window.__defer=false;return new Promise(resolve=>window.__deferred.push(()=>resolve(json(data))));}
     return json(data);
   }
+  if(p.endsWith('/contextMenu')){
+    const n=Number(p.match(/\/(\d+)\/contextMenu$/)[1]),base='https://jenkins.test/job/example-service/job/feature-release/'+n+'/';
+    return json({items:[
+      {type:'ITEM',displayName:'Changes',url:base+'changes',post:false,requiresConfirmation:false},
+      {type:'ITEM',displayName:'Console Output',url:base+'console',post:false,requiresConfirmation:false},
+      {type:'SEPARATOR'},
+      {type:'ITEM',displayName:'Test Result',url:base+'testReport/',post:false,requiresConfirmation:false},
+      {type:'ITEM',displayName:'Delete build',url:base+'doDelete',post:true,requiresConfirmation:true}
+    ]});
+  }
   if(p.endsWith('/wfapi/runs'))return json(window.__job.builds.filter(b=>b.number>=3).map(b=>window.__run(b.number)));
   if(p.endsWith('/wfapi/describe')){const n=Number(p.match(/\/(\d+)\/wfapi/)[1]);return n<3||window.__graphMissing?new Response('',{status:404}):json(window.__run(n));}
   if(p.endsWith('/stages/tree')){const n=Number(p.match(/\/(\d+)\/stages/)[1]);return json({status:'ok',data:{complete:true,stages:[{id:10,name:'Build '+n,state:'SUCCESS',type:'STAGE',children:[],totalDurationMillis:1000,startTimeMillis:1}]}});}
@@ -56,6 +66,14 @@ with sync_playwright() as p:
     }""")
     expect(page.locator('#duplicate-actions')).to_be_hidden();expect(page.locator('#permalink-column')).to_be_visible()
     ok('job breadcrumb dropdown hides duplicated actions but keeps permalink navigation')
+    page.get_by_role('button',name='Actions for build #3').click()
+    menu=page.get_by_role('menu',name='Actions for build #3')
+    expect(menu).to_be_visible();expect(page.locator('.pgvx-run-summary')).to_contain_text('#4')
+    expect(menu.get_by_role('menuitem',name='Changes')).to_have_attribute('href','https://jenkins.test/job/example-service/job/feature-release/3/changes')
+    expect(menu.get_by_role('menuitem',name='Console Output')).to_have_attribute('href','https://jenkins.test/job/example-service/job/feature-release/3/console')
+    expect(menu.get_by_text('Delete build')).to_contain_text('Original Jenkins page')
+    page.keyboard.press('Escape');expect(menu).to_be_hidden()
+    ok('recent build action menu mirrors Jenkins GET actions without selecting the build or executing POST actions')
     page.get_by_role('button',name='Select build #3',exact=True).click()
     expect(tests).to_contain_text('No JUnit report published');expect(artifacts).to_contain_text('No archived artifacts for #3')
     expect(page.locator('.pgvx-run-summary')).to_contain_text('FAILURE')

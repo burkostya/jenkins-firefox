@@ -7,3 +7,4 @@ export {Messages} from '../src/compat/i18n.tsx';
 
 export * from '../src/flow-table.ts';
 export * from '../src/overview.ts';
+export * from '../src/build-menu.ts';

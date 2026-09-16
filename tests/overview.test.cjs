@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {parseLocation,JenkinsApi,OVERVIEW_TREE,BUILD_FIELDS,normalizeOverview,normalizeBuild,testsFromActions,artifactUrl}=require('./lib.cjs');
+const {parseLocation,JenkinsApi,OVERVIEW_TREE,BUILD_FIELDS,normalizeOverview,normalizeBuild,testsFromActions,artifactUrl,normalizeBuildMenu,loadBuildMenu}=require('./lib.cjs');
 const raw=require('./fixtures/job-overview.json');
 const location=parseLocation('https://jenkins.test/job/example-service/job/feature-release/');
 const api=new JenkinsApi(location);
@@ -54,6 +54,31 @@ test('overview uses one fixed, read-only same-job JSON query',async()=>{
 });
 test('specific build metadata must match the requested build',async()=>{
  await mock(async(url)=>{const u=new URL(url);assert.equal(u.pathname,location.jobPath+'3/api/json');assert.equal(u.searchParams.get('tree'),BUILD_FIELDS);return Response.json(raw.builds[0]);},()=>assert.rejects(api.buildOverview(3),/identity/));
+});
+test('build context menu keeps same-job GET navigation and refuses mutations',async()=>{
+ const build='https://jenkins.test/job/example-service/job/feature-release/4/';
+ const payload={items:[
+  {type:'ITEM',displayName:'Changes',url:build+'changes',post:false,requiresConfirmation:false},
+  {type:'SEPARATOR'},
+  {type:'HEADER',displayName:'More'},
+  {type:'ITEM',displayName:'Delete build',url:build+'doDelete',post:true,requiresConfirmation:true},
+  {type:'ITEM',displayName:'External',url:'https://attacker.test/'},
+  {type:'ITEM',displayName:'Job page',url:'https://jenkins.test/job/example-service/job/feature-release/',post:false,requiresConfirmation:false}
+ ]};
+ const menu=normalizeBuildMenu(payload,build);
+ assert.deepEqual(menu,[
+  {kind:'link',label:'Changes',href:build+'changes'},
+  {kind:'separator'},
+  {kind:'header',label:'More'},
+  {kind:'disabled',label:'Delete build',reason:'Use the original Jenkins page for this action.'},
+  {kind:'link',label:'Job page',href:'https://jenkins.test/job/example-service/job/feature-release/'}
+ ]);
+ await mock(async(url,opts)=>{const u=new URL(url);assert.equal(u.href,build+'contextMenu');assert.equal(opts.method,'GET');assert.equal(opts.credentials,'same-origin');assert.equal(opts.redirect,'error');return Response.json(payload);},async()=>assert.deepEqual(await loadBuildMenu(build),menu));
+});
+test('build context menu rejects foreign bases, non-JSON and oversized schemas',async()=>{
+ assert.throws(()=>normalizeBuildMenu({items:[]},'https://jenkins.test/job/example-service/job/feature-release/not-a-build/'));
+ assert.throws(()=>normalizeBuildMenu({items:new Array(101).fill({})},'https://jenkins.test/job/example-service/job/feature-release/4/'));
+ await mock(async()=>new Response('<html>Login</html>',{headers:{'Content-Type':'text/html'}}),()=>assert.rejects(loadBuildMenu('https://jenkins.test/job/example-service/job/feature-release/4/'),/non-JSON/));
 });
 test('new Remote API capability does not expose arbitrary tree, depth or mutations',async()=>{
  for(const path of ['api/json','api/json?depth=2','api/json?tree=actions[parameters[*]]','api/json?tree='+encodeURIComponent(OVERVIEW_TREE)+'&depth=1','4/api/json?tree='+encodeURIComponent(OVERVIEW_TREE),'4/build','config.xml','4/api/json?tree='+encodeURIComponent(BUILD_FIELDS)+'#x'])await assert.rejects(api.json(location.jobPath+path),/Blocked/);
