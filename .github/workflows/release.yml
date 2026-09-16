@@ -5,17 +5,12 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'SemVer without v, for example 0.4.0'
-        required: true
-        type: string
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref }}
+  group: release-${{ github.event_name == 'workflow_dispatch' && 'manual' || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -38,21 +33,28 @@ jobs:
           package-manager-cache: false
 
       - name: Resolve and verify release version
-        env:
-          INPUT_VERSION: ${{ inputs.version }}
         shell: bash
         run: |
           set -euo pipefail
 
           git fetch --no-tags origin main
           release_sha="$(git rev-parse HEAD)"
+          package_version="$(node -p "require('./package.json').version")"
+          manifest_version="$(node -p "require('./manifest.json').version")"
+
+          if [[ "$package_version" != "$manifest_version" ]]; then
+            echo "Refusing to release: package.json is ${package_version}, manifest.json is ${manifest_version}" >&2
+            exit 1
+          fi
+
+          if [[ ! "$package_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Refusing to release: source version ${package_version} is not X.Y.Z SemVer" >&2
+            exit 1
+          fi
 
           if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
-            version="$INPUT_VERSION"
-            if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo "Version must be SemVer without a leading v, for example 0.4.0" >&2
-              exit 1
-            fi
+            version="$package_version"
+            tag="v${version}"
 
             main_sha="$(git rev-parse origin/main)"
             if [[ "$release_sha" != "$main_sha" ]]; then
@@ -60,9 +62,8 @@ jobs:
               exit 1
             fi
 
-            tag="v${version}"
             if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
-              echo "Refusing to release: tag ${tag} already exists" >&2
+              echo "Refusing to release: ${tag} already exists. Bump package.json and manifest.json in a PR before creating the next release." >&2
               exit 1
             fi
           else
@@ -77,19 +78,18 @@ jobs:
               echo "Refusing to release: tagged commit is not contained in origin/main" >&2
               exit 1
             fi
-          fi
 
-          package_version="$(node -p "require('./package.json').version")"
-          manifest_version="$(node -p "require('./manifest.json').version")"
+            if [[ "$version" != "$package_version" ]]; then
+              echo "Refusing to release: tag ${tag} does not match source version ${package_version}" >&2
+              exit 1
+            fi
+          fi
 
           printf 'release event:     %s\n' "$GITHUB_EVENT_NAME"
           printf 'release tag:       %s\n' "$tag"
           printf 'release SHA:       %s\n' "$release_sha"
           printf 'package version:   %s\n' "$package_version"
           printf 'manifest version:  %s\n' "$manifest_version"
-
-          test "$version" = "$package_version"
-          test "$version" = "$manifest_version"
 
           echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
