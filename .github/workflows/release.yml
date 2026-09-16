@@ -4,9 +4,19 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'SemVer without v, for example 0.4.0'
+        required: true
+        type: string
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -14,9 +24,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout tagged commit
+      - name: Checkout release commit
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -26,29 +37,63 @@ jobs:
           node-version: '22'
           package-manager-cache: false
 
-      - name: Verify release tag and versions
+      - name: Resolve and verify release version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         shell: bash
         run: |
           set -euo pipefail
 
-          tag="${GITHUB_REF_NAME}"
-          version="${tag#v}"
+          git fetch --no-tags origin main
+          release_sha="$(git rev-parse HEAD)"
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="$INPUT_VERSION"
+            if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Version must be SemVer without a leading v, for example 0.4.0" >&2
+              exit 1
+            fi
+
+            main_sha="$(git rev-parse origin/main)"
+            if [[ "$release_sha" != "$main_sha" ]]; then
+              echo "Refusing to release: checked out commit is not the current origin/main" >&2
+              exit 1
+            fi
+
+            tag="v${version}"
+            if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+              echo "Refusing to release: tag ${tag} already exists" >&2
+              exit 1
+            fi
+          else
+            tag="$GITHUB_REF_NAME"
+            if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Unexpected release tag: ${tag}" >&2
+              exit 1
+            fi
+            version="${tag#v}"
+
+            if ! git merge-base --is-ancestor "$release_sha" origin/main; then
+              echo "Refusing to release: tagged commit is not contained in origin/main" >&2
+              exit 1
+            fi
+          fi
+
           package_version="$(node -p "require('./package.json').version")"
           manifest_version="$(node -p "require('./manifest.json').version")"
 
-          printf 'tag version:      %s\n' "$version"
-          printf 'package version:  %s\n' "$package_version"
-          printf 'manifest version: %s\n' "$manifest_version"
+          printf 'release event:     %s\n' "$GITHUB_EVENT_NAME"
+          printf 'release tag:       %s\n' "$tag"
+          printf 'release SHA:       %s\n' "$release_sha"
+          printf 'package version:   %s\n' "$package_version"
+          printf 'manifest version:  %s\n' "$manifest_version"
 
-          test "$tag" = "v${version}"
           test "$version" = "$package_version"
           test "$version" = "$manifest_version"
 
-          git fetch --no-tags origin main
-          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
-            echo "Refusing to release: tagged commit is not contained in origin/main" >&2
-            exit 1
-          fi
+          echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
+          echo "RELEASE_SHA=$release_sha" >> "$GITHUB_ENV"
 
       - name: Build and unit tests
         run: |
@@ -59,9 +104,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME#v}"
           built_version="$(node -p "require('./extension/manifest.json').version")"
-          test "$version" = "$built_version"
+          test "$RELEASE_VERSION" = "$built_version"
 
       - name: Install browser test runner
         run: |
@@ -85,8 +129,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME#v}"
-          archive="pipeline-graph-local-firefox-${version}.zip"
+          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
 
           mkdir -p dist
           (
@@ -100,18 +143,34 @@ jobs:
 
           unzip -t "dist/${archive}"
 
-      - name: Publish GitHub Release
+      - name: Publish existing pushed tag
+        if: github.event_name == 'push'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME#v}"
-          archive="pipeline-graph-local-firefox-${version}.zip"
+          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
 
-          gh release create "$GITHUB_REF_NAME" \
+          gh release create "$RELEASE_TAG" \
             "dist/${archive}" \
             "dist/${archive}.sha256" \
             --verify-tag \
             --generate-notes \
-            --title "Pipeline Graph Local ${GITHUB_REF_NAME}"
+            --title "Pipeline Graph Local ${RELEASE_TAG}"
+
+      - name: Create tag and publish manual release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+
+          gh release create "$RELEASE_TAG" \
+            "dist/${archive}" \
+            "dist/${archive}.sha256" \
+            --target "$RELEASE_SHA" \
+            --generate-notes \
+            --title "Pipeline Graph Local ${RELEASE_TAG}"
