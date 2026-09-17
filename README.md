@@ -1,6 +1,6 @@
 # Pipeline Graph Local for Jenkins / Firefox
 
-Version **0.4.0**. A read-only Firefox extension using the graph renderer and
+Version **0.7.0**. A read-only Firefox extension using the graph renderer and
 nested layout from **Pipeline Graph View 1013.v9f83fd83c063**. No controller
 upgrade, additional Jenkins plugin, Replay permission or API token is required
 for the supported Pipeline Steps HTML format.
@@ -38,9 +38,20 @@ is generated, not checked into Git. Load **extension/manifest.json**, not the
 root manifest template, in Firefox at `about:debugging#/runtime/this-firefox`
 using **Load Temporary Add-on**. The declared minimum Firefox version is 140.
 
-Remove/reload the old temporary add-on, **reload the Jenkins tab**, then click
-the extension toolbar/menu button on a job, build or Pipeline Steps page.
-Temporary installation does not survive a Firefox restart. This development
+Remove/reload the old temporary add-on and reload the Jenkins tab. Clicking the
+extension button now opens an activation popup with three modes:
+
+- **Run once** — inject into the current Jenkins job/build tab using `activeTab`.
+  Nothing is saved and no persistent host access is granted.
+- **Always on this Jenkins** — Firefox asks once for the exact current Jenkins
+  origin (for example `https://jenkins.example/*`). After approval that origin is
+  saved locally and `/job/` pages activate automatically on load/reload.
+- **Disable auto on this Jenkins** — removes the saved origin, revokes that
+  optional host permission and deactivates the extension on the current page.
+
+Automatic mode is never enabled at install time and no Jenkins hostname is
+hardcoded. Temporary installation still does not survive a Firefox restart; a
+signed/persistent installation is intentionally left for later. This development
 package is unsigned; no signing or native Firefox/SSO certification is implied.
 Do not disable browser security to install it.
 
@@ -62,12 +73,17 @@ wfapi. Build and Pipeline Steps pages retain the existing graph-only UI.
 
 ## Access and safety
 
-Permissions remain `activeTab`, `scripting`, `storage`; activation is by toolbar
-click. Requests are allowlisted, same-origin, job-scoped GETs using the current
-Jenkins session, with redirects blocked. No credentials, parameters, environment
+Required permissions remain `activeTab`, `scripting` and `storage`. The manifest
+also declares **optional** HTTP/HTTPS host access so Firefox can grant only the
+specific Jenkins origin chosen with **Always on this Jenkins**. There are no
+required `host_permissions` and no static `content_scripts`.
+
+Requests are allowlisted, same-origin, job-scoped GETs using the current Jenkins
+session, with redirects blocked. No credentials, parameters, environment
 variables, build/replay/configuration actions or external services are requested.
 Artifact content is never automatically downloaded. Names/logs are rendered as
-text; links are validated. Preferences are local to the browser.
+text; links are validated. Preferences and enabled Jenkins origins are stored
+locally in the browser.
 
 ## Tests
 
@@ -84,10 +100,12 @@ Set `CHROMIUM_EXECUTABLE` when Chromium is not at `/usr/bin/chromium`.
 `test-results/`). CI runs tests and publishes the unsigned extension and browser
 reports. It has read-only repository permissions and does not commit or merge.
 
-Locally verified: **75 Node tests and 57 Chromium DOM checks**, mocked HTTP and
-storage. The real Jenkins server, SSO and Firefox extension sandbox were not
-tested. Compilation is TypeScript syntax transpilation, not semantic type checking.
-The new fixtures use fictional identifiers; raw captured job HTML is not committed.
+The activation test suite covers exact-origin permission patterns, invalid URL
+rejection, manual injection, automatic injection only for saved+granted origins,
+stale-permission cleanup and page deactivation. Browser graph tests continue to
+use mocked HTTP/storage. The real Jenkins server, SSO and Firefox extension
+sandbox are not tested. Compilation is TypeScript syntax transpilation, not
+semantic type checking. Raw captured job HTML is not committed.
 
 ## Source and licensing
 

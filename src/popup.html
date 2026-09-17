@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pipeline Graph Local</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img src="icon.svg" width="28" height="28" alt="">
+      <div>
+        <h1>Pipeline Graph Local</h1>
+        <p id="origin">Jenkins</p>
+      </div>
+    </header>
+
+    <div class="mode-row">
+      <span>Current mode</span>
+      <strong id="mode">Checking…</strong>
+    </div>
+
+    <div class="actions">
+      <button id="run-once" class="primary" type="button">
+        <span>Run once</span>
+        <small>Activate only in this tab</small>
+      </button>
+      <button id="always" type="button">
+        <span>Always on this Jenkins</span>
+        <small>Ask Firefox for this Jenkins origin only</small>
+      </button>
+      <button id="disable" type="button">
+        <span>Disable auto on this Jenkins</span>
+        <small>Revoke saved auto-enable access</small>
+      </button>
+    </div>
+
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+  <script src="activation.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
