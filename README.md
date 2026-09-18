@@ -1,6 +1,6 @@
 # Pipeline Graph Local for Jenkins / Firefox
 
-Version **0.8.0**. A read-only Firefox extension using the graph renderer and
+Version **0.8.1**. A read-only Firefox extension using the graph renderer and
 nested layout from **Pipeline Graph View 1013.v9f83fd83c063**. No controller
 upgrade, additional Jenkins plugin, Replay permission or API token is required
 for the supported Pipeline Steps HTML format.

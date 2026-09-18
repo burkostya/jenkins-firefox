@@ -106,7 +106,7 @@ export function adaptFlowRows(rows:FlowRow[],run:WfRun,runPath:string):Adapted {
   const meta=new Map<number,NodeMeta>(),consumed=new Set<number>(),warnings:string[]=[];
   const live=isActive(run.status);
   let displayed=0;
-  function make(row:RowNode,name:string,type:StageInfo['type'],children:StageInfo[],stepId=row.id,bodyId?:number):StageInfo {
+  function make(row:RowNode,name:string,type:StageInfo['type'],children:StageInfo[],stepId=row.id,bodyId?:number,stateRow:RowNode=row):StageInfo {
     if(++displayed>3000)fail('more than 3,000 displayed nodes.');
     const candidates=[...new Set([row.id,stepId,bodyId].filter((n):n is number=>n!==undefined))];
     const matches=candidates.map(id=>byId.get(id)).filter(Boolean);
@@ -114,14 +114,20 @@ export function adaptFlowRows(rows:FlowRow[],run:WfRun,runPath:string):Adapted {
     const raw=matches[0];if(raw)consumed.add(Number(raw.id));
     const id=raw?Number(raw.id):row.id;
     if(meta.has(id))fail('duplicate projected node.');
-    const baseState=raw?status(raw.status):row.state;
+    const rawState=raw?status(raw.status):Result.unknown;
+    const htmlState=stateRow.state;
+    // A live stage call can already be terminal in wfapi while its stage-body
+    // block is still open. The body row is the execution-container state, so
+    // only its active state may override a stale terminal wfapi chunk.
+    const bodyActive=live&&(htmlState===Result.running||htmlState===Result.paused||htmlState===Result.queued);
+    const baseState=bodyActive?htmlState:(raw?rawState:htmlState);
     const base:StageInfo={id,name,title:name,state:baseState,type,children,
       startTimeMillis:raw?.startTimeMillis??0,pauseDurationMillis:raw?.pauseDurationMillis??0,
       agent:raw?.execNode||'',url:runPath+'execution/node/'+(bodyId??stepId)+'/log/',
       isSequential:children.length>0&&children[0].type!=='PARALLEL'};
-    const flow:NonNullable<NodeMeta['flow']>={stepId,bodyId,depth:row.depth,tableState:row.state,
+    const flow:NonNullable<NodeMeta['flow']>={stepId,bodyId,depth:row.depth,tableState:htmlState,
       tableDuration:row.durationText,rawState:raw?.status,rawDurationMillis:raw?.durationMillis,
-      stateSource:children.length?'derived-children':raw?'wfapi':'html-node',durationSource:'unavailable'};
+      stateSource:children.length?'derived-children':bodyActive?'html-node':raw?'wfapi':'html-node',durationSource:'unavailable'};
     if(children.length){
       // This is a display aggregate, not StatusAndTiming.computeChunkStatus.
       base.state=collapseSelectiveStages([base],new Set([id]))[0].state;
@@ -161,7 +167,7 @@ export function adaptFlowRows(rows:FlowRow[],run:WfRun,runPath:string):Adapted {
         if(children.length===1&&children[0].type==='PARALLEL_BLOCK'){
           parallelId=children[0].id;meta.delete(parallelId);children=children[0].children;
         }
-        const node=make(row,row.args,'STAGE',children,row.id,inner?.id);
+        const node=make(row,row.args,'STAGE',children,row.id,inner?.id,inner??row);
         if(parallelId)meta.get(node.id)!.flow!.parallelId=parallelId;
         out.push(node);
       }else if(row.label==='parallel'){

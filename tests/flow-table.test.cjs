@@ -78,6 +78,17 @@ test('live runs use snapshot-labelled HTML timing and request further updates',(
  const r=copy(run);r.status='IN_PROGRESS';r.stages.find(s=>s.name==='Tests').status='IN_PROGRESS';
  const a=adapt(rows,r);assert.equal(a.complete,false);assert.equal(find(a,'Test').state,'running');assert.match(find(a,'Test').pgvxDurationLabel,/snapshot/);
 });
+test('live stage body overrides a stale successful wfapi chunk until the body closes',()=>{
+ const rs=copy(rows),r=copy(run);r.status='IN_PROGRESS';
+ const call=rs.find(s=>s.id===92),body=rs.find(s=>s.id===93),rawStage=r.stages.find(s=>s.name==='Tests');
+ assert.equal(call.state,'success');body.state='running';rawStage.status='SUCCESS';rawStage.durationMillis=50;
+ const a=adapt(rs,r),tests=find(a,'Tests'),parent=find(a,'Test');
+ assert.equal(tests.state,'running');assert.equal(tests.totalDurationMillis,undefined);
+ assert.equal(a.meta.get(tests.id).flow.stateSource,'html-node');
+ assert.equal(a.meta.get(tests.id).flow.tableState,'running');
+ assert.equal(a.meta.get(tests.id).raw.status,'SUCCESS');
+ assert.equal(parent.state,'running');
+});
 function row(id,depth,label,args='',scope='block'){return {id,depth,label,args,scope,state:'success',durationText:'1 sec',durationMillis:1000};}
 function raw(id,name){return {id:String(id),name,status:'SUCCESS',durationMillis:1000,startTimeMillis:1};}
 function minimal(rs,ss){return adapt(rs,{...run,stages:ss});}
