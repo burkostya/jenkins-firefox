@@ -106,6 +106,18 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   const adapted=useMemo<Adapted>(()=>run?(tree?.runId===run.id?tree.data:adaptFlatRun(run,api.runPath(run))):{stages:[],meta:new Map(),warnings:[],source:'wfapi'},[run,tree,api]);
   const hasTopology=adapted.source!=='wfapi';
   const fromHtml=adapted.source==='flow-graph-table';
+  const sourceLabel=fromHtml?'Pipeline Steps HTML':hasTopology?'Jenkins execution tree':'wfapi / flat status list';
+  const sourceDetail=fromHtml
+    ?'Hierarchy comes from this build\'s flowGraphTable, matched to wfapi by node ID. Container states are display aggregates; ~ marks HTML-rounded block durations. No local grouping rules.'
+    :hasTopology
+      ?'Grouping, branches, durations and node states come from this build\'s /stages/tree response. No local grouping rules are used.'
+      :'Hierarchy is unavailable: no parent-child relationship or execution dependency is inferred from names, timestamps or API order.';
+  useEffect(()=>{
+    host.dataset.pgvxSource=sourceLabel;
+    host.dataset.pgvxSourceDetail=sourceDetail;
+    host.dataset.pgvxSourceNote=treeNote;
+    return()=>{delete host.dataset.pgvxSource;delete host.dataset.pgvxSourceDetail;delete host.dataset.pgvxSourceNote;};
+  },[host,sourceLabel,sourceDetail,treeNote]);
   const collapseKey=settingsKey+'/collapsed/'+(run?.id||'none')+'/'+adapted.source;
   const [collapsed,setCollapsed]=useState<Set<number>>(new Set()),[collapseReady,setCollapseReady]=useState(false);
   useEffect(()=>{
@@ -157,10 +169,6 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
       {error&&<div role="alert" className="pgvx-error">{error}</div>}
       {!run&&!loading&&!error&&<div className="pgvx-empty">No pipeline stages available for this selection.</div>}
       {run&&<>
-        <div className="pgvx-notice"><b>{fromHtml?'Source: Pipeline Steps HTML':hasTopology?'Source: Jenkins execution tree':'Source: wfapi / flat status list'}</b><br/>
-          {fromHtml?'Hierarchy comes from this build\'s flowGraphTable, matched to wfapi by node ID. Container states are display aggregates; ~ marks HTML-rounded block durations. No local grouping rules.':hasTopology?'Grouping, branches, durations and node states come from this build\'s /stages/tree response. No local grouping rules are used.':'Hierarchy is unavailable: no parent-child relationship or execution dependency is inferred from names, timestamps or API order.'}
-        </div>
-        {treeNote&&<div className="pgvx-warning" role="status">{treeNote}</div>}
         {adapted.warnings.map(w=><div className="pgvx-warning" key={w}>{w}</div>)}
         {adapted.stages.length===0&&<div className="pgvx-empty">No stages reported yet. The build may be queued or still starting.</div>}
         {hasTopology&&collapseReady&&adapted.stages.length>0&&<GraphViewport
