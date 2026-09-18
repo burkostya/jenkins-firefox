@@ -1,6 +1,6 @@
 # Pipeline Graph Local for Jenkins / Firefox
 
-Version **0.7.0**. A read-only Firefox extension using the graph renderer and
+Version **0.8.0**. A read-only Firefox extension using the graph renderer and
 nested layout from **Pipeline Graph View 1013.v9f83fd83c063**. No controller
 upgrade, additional Jenkins plugin, Replay permission or API token is required
 for the supported Pipeline Steps HTML format.
@@ -25,8 +25,13 @@ Only validated JUnit TestResultAction counters are used. See
 
 ## Install or update
 
-Download the **pipeline-graph-local-firefox** artifact from a successful PR
-workflow run and unpack it. Or build locally with Node >=22:
+Signed releases use the permanent Firefox add-on ID
+`jenkins-firefox@burkostya.github.io`. Install the signed `.xpi` from a GitHub
+Release with **Firefox → Add-ons and themes → gear menu → Install Add-on From
+File…**. Signed installations survive Firefox restart.
+
+For development, download the **pipeline-graph-local-firefox** artifact from a
+successful PR workflow run and unpack it, or build locally with Node >=22:
 
 ```sh
 npm run build
@@ -36,24 +41,31 @@ npm test
 No npm install or network is needed for the vendored source build. `extension/`
 is generated, not checked into Git. Load **extension/manifest.json**, not the
 root manifest template, in Firefox at `about:debugging#/runtime/this-firefox`
-using **Load Temporary Add-on**. The declared minimum Firefox version is 140.
+using **Load Temporary Add-on**.
 
-Remove/reload the old temporary add-on and reload the Jenkins tab. Clicking the
-extension button now opens an activation popup with three modes:
+Clicking the extension button opens an activation popup with three modes:
 
 - **Run once** — inject into the current Jenkins job/build tab using `activeTab`.
   Nothing is saved and no persistent host access is granted.
 - **Always on this Jenkins** — Firefox asks once for the exact current Jenkins
-  origin (for example `https://jenkins.example/*`). After approval that origin is
-  saved locally and `/job/` pages activate automatically on load/reload.
+  origin. After approval that origin is saved locally and `/job/` pages activate
+  automatically on load/reload.
 - **Disable auto on this Jenkins** — removes the saved origin, revokes that
   optional host permission and deactivates the extension on the current page.
 
 Automatic mode is never enabled at install time and no Jenkins hostname is
-hardcoded. Temporary installation still does not survive a Firefox restart; a
-signed/persistent installation is intentionally left for later. This development
-package is unsigned; no signing or native Firefox/SSO certification is implied.
-Do not disable browser security to install it.
+hardcoded. The declared minimum Firefox version is 140.
+
+## Firefox signing
+
+Releases are submitted to AMO as **unlisted/self-distributed** extensions and
+the signed XPI is published as a GitHub Release asset. The release workflow
+requires the repository secrets `AMO_JWT_ISSUER` and `AMO_JWT_SECRET`.
+
+The workflow uploads a matching source archive to Mozilla for each signed
+version. Reviewer build instructions are in [AMO_SOURCE_REVIEW.md](AMO_SOURCE_REVIEW.md).
+The source build itself remains offline/reproducible; `web-ext` is needed only
+by the release workflow for linting and AMO submission.
 
 ## Graph data sources
 
