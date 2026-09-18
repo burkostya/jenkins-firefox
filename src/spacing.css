@@ -13,12 +13,6 @@
   padding-right: var(--pgvx-gutter);
 }
 
-.pgvx-notice {
-  margin-left: var(--pgvx-gutter);
-  margin-right: var(--pgvx-gutter);
-  max-width: calc(100% - (var(--pgvx-gutter) * 2));
-}
-
 .pgvx-graph-title {
   left: var(--pgvx-gutter);
 }
