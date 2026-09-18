@@ -16,7 +16,7 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 55
 
     steps:
       - name: Checkout release commit
@@ -41,9 +41,15 @@ jobs:
           release_sha="$(git rev-parse HEAD)"
           package_version="$(node -p "require('./package.json').version")"
           manifest_version="$(node -p "require('./manifest.json').version")"
+          addon_id="$(node -p "require('./manifest.json').browser_specific_settings.gecko.id")"
 
           if [[ "$package_version" != "$manifest_version" ]]; then
             echo "Refusing to release: package.json is ${package_version}, manifest.json is ${manifest_version}" >&2
+            exit 1
+          fi
+
+          if [[ "$addon_id" != "jenkins-firefox@burkostya.github.io" ]]; then
+            echo "Refusing to release: unexpected Firefox add-on ID ${addon_id}" >&2
             exit 1
           fi
 
@@ -90,6 +96,7 @@ jobs:
           printf 'release SHA:       %s\n' "$release_sha"
           printf 'package version:   %s\n' "$package_version"
           printf 'manifest version:  %s\n' "$manifest_version"
+          printf 'Firefox add-on ID: %s\n' "$addon_id"
 
           echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
@@ -100,12 +107,14 @@ jobs:
           npm run build
           npm test
 
-      - name: Verify built manifest version
+      - name: Verify built manifest identity
         shell: bash
         run: |
           set -euo pipefail
           built_version="$(node -p "require('./extension/manifest.json').version")"
+          built_id="$(node -p "require('./extension/manifest.json').browser_specific_settings.gecko.id")"
           test "$RELEASE_VERSION" = "$built_version"
+          test "$built_id" = "jenkins-firefox@burkostya.github.io"
 
       - name: Install browser test runner
         run: |
@@ -125,23 +134,68 @@ jobs:
           npm run test:flow-browser
           npm run test:overview-browser
 
-      - name: Package release assets
+      - name: Package unsigned and source assets
         shell: bash
         run: |
           set -euo pipefail
-          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          unsigned="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          source_archive="pipeline-graph-local-firefox-${RELEASE_VERSION}-source.zip"
 
           mkdir -p dist
           (
             cd extension
-            zip -q -r "../dist/${archive}" .
-          )
-          (
-            cd dist
-            sha256sum "$archive" > "${archive}.sha256"
+            zip -q -r "../dist/${unsigned}" .
           )
 
-          unzip -t "dist/${archive}"
+          git archive             --format=zip             --prefix="jenkins-firefox-${RELEASE_VERSION}/"             --output="dist/${source_archive}"             "$RELEASE_SHA"
+
+          (
+            cd dist
+            sha256sum "$unsigned" > "${unsigned}.sha256"
+            sha256sum "$source_archive" > "${source_archive}.sha256"
+          )
+
+          unzip -t "dist/${unsigned}"
+          unzip -t "dist/${source_archive}"
+
+      - name: Install Mozilla web-ext
+        run: npm install --global web-ext@10.6.0
+
+      - name: Lint Firefox package
+        run: web-ext lint --source-dir extension --self-hosted
+
+      - name: Sign unlisted Firefox XPI on AMO
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${WEB_EXT_API_KEY:-}" || -z "${WEB_EXT_API_SECRET:-}" ]]; then
+            echo "AMO_JWT_ISSUER and AMO_JWT_SECRET repository secrets are required." >&2
+            exit 1
+          fi
+
+          source_archive="dist/pipeline-graph-local-firefox-${RELEASE_VERSION}-source.zip"
+          rm -rf amo-artifacts
+          mkdir -p amo-artifacts
+
+          web-ext sign             --source-dir extension             --artifacts-dir amo-artifacts             --channel unlisted             --amo-metadata amo-metadata.json             --upload-source-code "$source_archive"             --api-key "$WEB_EXT_API_KEY"             --api-secret "$WEB_EXT_API_SECRET"             --timeout 600000             --approval-timeout 2400000             --no-input
+
+          mapfile -t xpis < <(find amo-artifacts -maxdepth 1 -type f -name '*.xpi' -print)
+          if [[ "${#xpis[@]}" -ne 1 ]]; then
+            echo "Expected exactly one signed XPI, found ${#xpis[@]}" >&2
+            find amo-artifacts -maxdepth 1 -type f -print >&2 || true
+            exit 1
+          fi
+
+          signed="pipeline-graph-local-firefox-${RELEASE_VERSION}.xpi"
+          cp "${xpis[0]}" "dist/${signed}"
+          (
+            cd dist
+            sha256sum "$signed" > "${signed}.sha256"
+          )
 
       - name: Publish existing pushed tag
         if: github.event_name == 'push'
@@ -150,14 +204,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          unsigned="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          signed="pipeline-graph-local-firefox-${RELEASE_VERSION}.xpi"
+          source_archive="pipeline-graph-local-firefox-${RELEASE_VERSION}-source.zip"
 
-          gh release create "$RELEASE_TAG" \
-            "dist/${archive}" \
-            "dist/${archive}.sha256" \
-            --verify-tag \
-            --generate-notes \
-            --title "Pipeline Graph Local ${RELEASE_TAG}"
+          gh release create "$RELEASE_TAG"             "dist/${unsigned}"             "dist/${unsigned}.sha256"             "dist/${signed}"             "dist/${signed}.sha256"             "dist/${source_archive}"             "dist/${source_archive}.sha256"             --verify-tag             --generate-notes             --title "Pipeline Graph Local ${RELEASE_TAG}"
 
       - name: Create tag and publish manual release
         if: github.event_name == 'workflow_dispatch'
@@ -166,11 +217,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          archive="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          unsigned="pipeline-graph-local-firefox-${RELEASE_VERSION}.zip"
+          signed="pipeline-graph-local-firefox-${RELEASE_VERSION}.xpi"
+          source_archive="pipeline-graph-local-firefox-${RELEASE_VERSION}-source.zip"
 
-          gh release create "$RELEASE_TAG" \
-            "dist/${archive}" \
-            "dist/${archive}.sha256" \
-            --target "$RELEASE_SHA" \
-            --generate-notes \
-            --title "Pipeline Graph Local ${RELEASE_TAG}"
+          gh release create "$RELEASE_TAG"             "dist/${unsigned}"             "dist/${unsigned}.sha256"             "dist/${signed}"             "dist/${signed}.sha256"             "dist/${source_archive}"             "dist/${source_archive}.sha256"             --target "$RELEASE_SHA"             --generate-notes             --title "Pipeline Graph Local ${RELEASE_TAG}"

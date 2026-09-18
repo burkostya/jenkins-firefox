@@ -1,0 +1,6 @@
+{
+  "version": {
+    "license": "MIT",
+    "approval_notes": "Source/build instructions are in AMO_SOURCE_REVIEW.md in the uploaded source archive. Build is offline and reproducible with Node >=22: run node build.cjs; generated Firefox package is extension/. Bundled source includes Jenkins Pipeline Graph View tag 1013.v9f83fd83c063, vendored React 18.2.0 runtime, TypeScript compiler, licenses and recorded upstream hashes. No remote code, eval or CDN is used. HTTP/HTTPS host access is optional only; the user explicitly grants one exact Jenkins origin for auto-activation."
+  }
+}
