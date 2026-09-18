@@ -59,8 +59,8 @@ with sync_playwright() as p:
  expect(flat.locator('.PWGx-PipelineGraph')).to_have_count(0)
  expect(flat.locator('.cbwf-stage-view')).to_be_hidden()
  expect(flat.locator('.pgvx-notice')).to_have_count(0)
- assert flat.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source')=='wfapi / flat status list'
- assert '404' in (flat.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source-note') or '')
+ expect(flat.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source','wfapi / flat status list')
+ expect(flat.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source-note',re.compile('404'))
  ok('missing server tree gives 16 raw statuses, no graph edges, groups or fake parent status')
  assert flat.get_by_role('button',name='Grouping',exact=True).count()==0
  assert 'FAKE OLD GROUP' not in flat.locator('#pipeline-graph-local-extension').inner_text()
@@ -95,7 +95,7 @@ with sync_playwright() as p:
  assert not errors,errors
  server,errors=page_for('tree')
  expect(server.locator('.pgvx-notice')).to_have_count(0)
- assert server.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source')=='Jenkins execution tree'
+ expect(server.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source','Jenkins execution tree')
  expect(server.locator('.PWGx-pipeline-node')).to_have_count(7)
  expect(server.locator('.pgvx-flat')).to_have_count(0)
  test_link=server.get_by_role('link',name='Test',exact=True)
@@ -153,10 +153,10 @@ with sync_playwright() as p:
  server.screenshot(path=str(ROOT/'preview/regression-server-tree.png'),full_page=True)
  flat.screenshot(path=str(ROOT/'preview/regression-wfapi-flat.png'),full_page=True)
  denied,_=page_for('tree403');expect(denied.locator('.pgvx-flat-item')).to_have_count(16)
- assert 'HTTP 403' in (denied.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source-note') or '')
+ expect(denied.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source-note',re.compile('HTTP 403'))
  ok('tree authorization failure is not mistaken for missing plugin or successful hierarchy')
  malformed,_=page_for('malformedTree')
- assert 'Invalid Pipeline Graph View tree envelope' in (malformed.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source-note') or '')
+ expect(malformed.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source-note',re.compile('Invalid Pipeline Graph View tree envelope'))
  expect(malformed.locator('.pgvx-flat-item')).to_have_count(16)
  ok('invalid tree data fails to explicitly labelled flat mode without invented groups')
  html,_=page_for('html');expect(html.get_by_role('alert')).to_contain_text('non-JSON')
@@ -170,7 +170,7 @@ with sync_playwright() as p:
  live_tree=json.loads(json.dumps(TREE));live_tree['data']['complete']=False
  live,_=page_for('tree',tree=live_tree,location='https://jenkins.test/job/bus_backend/job/BUS-4497-agent-flow-improvements/2/')
  expect(live.locator('.pgvx-notice')).to_have_count(0)
- assert live.locator('#pipeline-graph-local-extension').get_attribute('data-pgvx-source')=='Jenkins execution tree'
+ expect(live.locator('#pipeline-graph-local-extension')).to_have_attribute('data-pgvx-source','Jenkins execution tree')
  before=len(live.evaluate('window.__requests'));live.wait_for_timeout(5300)
  assert len(live.evaluate('window.__requests'))>before
  live.get_by_label('Auto-refresh',exact=True).uncheck()
