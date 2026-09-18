@@ -17,6 +17,12 @@ test('release manifest keeps persistent Jenkins access optional and user-scoped'
  assert.equal(manifest.action.default_popup,'popup.html');
 });
 
+test('signed Firefox identity is stable and explicit',()=>{
+ const manifest=JSON.parse(fs.readFileSync(path.join(root,'extension/manifest.json')));
+ assert.equal(manifest.browser_specific_settings.gecko.id,'jenkins-firefox@burkostya.github.io');
+ assert.match(manifest.version,/^\d+\.\d+\.\d+$/);
+});
+
 test('activation UI does not hardcode a Jenkins hostname',()=>{
  const code=fs.readFileSync(path.join(root,'extension/popup.js'),'utf8')+fs.readFileSync(path.join(root,'extension/background.js'),'utf8');
  assert.ok(code.includes('permissions.request'));
