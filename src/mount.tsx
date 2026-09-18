@@ -33,15 +33,8 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   const overviewEnabled=!!location.isJobPage && document.body.dataset.modelType==='org.jenkinsci.plugins.workflow.job.WorkflowJob';
   const layout=overviewEnabled?createJobPageLayout(panel as HTMLElement,host,original):null;
   const onOverview=(enabled:boolean)=>layout?.setEnabled(enabled);
-  function decorateProvenance(){
-    const notice=target.querySelector<HTMLElement>('.pgvx-notice');if(!notice)return;
-    const text=notice.textContent?.replace(/\s+/g,' ').trim()||'';
-    const tooltip=text?'Hierarchy comes from the selected build when available. '+text:'';
-    if(tooltip&&notice.dataset.pgvxTooltipText!==tooltip){notice.title=tooltip;notice.setAttribute('aria-label',tooltip);notice.dataset.pgvxTooltipText=tooltip;}
-  }
-  const provenanceObserver=new MutationObserver(decorateProvenance);provenanceObserver.observe(target,{childList:true,subtree:true,characterData:true});
   let closed=false;const root=createRoot(target);
-  function close(){if(closed)return;closed=true;host.removeEventListener('pgvx-deactivate',close);provenanceObserver.disconnect();layout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
+  function close(){if(closed)return;closed=true;host.removeEventListener('pgvx-deactivate',close);layout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
   host.addEventListener('pgvx-deactivate',close);
   window.addEventListener('pagehide',close,{once:true});
   root.render(<ErrorBoundary onClose={close}><App overviewEnabled={overviewEnabled} onOverview={onOverview} classicLabel={original?.id==='nodeGraph'?'Original Pipeline Steps':'Original Stage View'} {...{location,portal,host}} onClassic={showClassic} onClose={close}/></ErrorBoundary>);
