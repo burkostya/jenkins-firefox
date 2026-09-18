@@ -66,8 +66,11 @@ with sync_playwright() as p:
     assert page.locator('.pgvx-graph-card').evaluate("e=>getComputedStyle(e).borderTopWidth")=='0px'
     expect(page.locator('.pgvx-graph-footer')).to_be_hidden();expect(page.locator('.pgvx-footer')).to_be_hidden()
     assert page.locator('#side-panel').evaluate("e=>getComputedStyle(e).borderRightWidth")=='1px'
-    notice=page.locator('.pgvx-notice');title=notice.get_attribute('title');assert title and 'Hierarchy comes from' in title
-    ok('overview and graph use separators instead of nested cards; provenance is a compact tooltip')
+    expect(page.locator('.pgvx-notice')).to_have_count(0)
+    host_node=page.locator('#pipeline-graph-local-extension')
+    assert host_node.get_attribute('data-pgvx-source')=='Jenkins execution tree'
+    assert '/stages/tree' in (host_node.get_attribute('data-pgvx-source-detail') or '')
+    ok('overview and graph use separators without rendering technical source provenance on the Jenkins page')
     page.evaluate("""{
       const root=document.createElement('div');root.id='breadcrumb-popover';
       root.innerHTML='<div class="jenkins-dropdown__split-container"><div id="duplicate-actions"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/changes">Changes</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/build">Build Now</a></div></div><div id="permalink-column"><div class="jenkins-dropdown"><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastBuild">Last build</a><a class="jenkins-dropdown__item" href="/job/example-service/job/feature-release/lastSuccessfulBuild">Last successful build</a></div></div></div>';

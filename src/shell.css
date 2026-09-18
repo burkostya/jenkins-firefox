@@ -63,10 +63,6 @@ svg {vertical-align:middle;}
 .pgvx-run-actions {margin-left:auto;display:flex;gap:12px;align-items:center;font-size:11px;white-space:nowrap;}
 .pgvx-run-actions button {font-size:11px;}
 .pgvx-muted {color:var(--text-color-secondary);}
-.pgvx-notice {display:inline-block;max-width:calc(100% - 44px);margin:8px 22px 0;padding:0;font-size:0;line-height:0;color:var(--text-color-secondary);cursor:help;white-space:nowrap;}
-.pgvx-notice b {font-size:10px;line-height:1.4;font-weight:600;border-bottom:1px dotted currentColor;}
-.pgvx-notice b::before {content:'ⓘ ';font-weight:400;}
-.pgvx-notice br {display:none;}
 .pgvx-text-button {font-size:11px;color:var(--accent);border:0;padding:1px 3px;min-height:0;background:transparent;}
 .pgvx-warning {color:var(--warning);font-size:12px;padding:7px 22px;}
 .pgvx-error {padding:12px 18px;margin:12px;border:1px solid color-mix(in srgb,var(--error),transparent 60%);background:color-mix(in srgb,var(--error),transparent 94%);color:var(--error);border-radius:6px;font-size:13px;}

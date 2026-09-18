@@ -5,6 +5,10 @@ const els={
   runOnce:document.getElementById('run-once'),
   always:document.getElementById('always'),
   disable:document.getElementById('disable'),
+  debug:document.getElementById('debug'),
+  debugSource:document.getElementById('debug-source'),
+  debugDetail:document.getElementById('debug-detail'),
+  debugNote:document.getElementById('debug-note'),
   message:document.getElementById('message')
 };
 let current={tab:null,url:null,origin:null,pattern:null,listed:false,granted:false};
@@ -24,6 +28,33 @@ function setMessage(text,error=false){
   els.message.textContent=text||'';
   els.message.classList.toggle('error',!!error);
 }
+async function readPageDebug(tabId){
+  try{
+    const result=await browser.scripting.executeScript({
+      target:{tabId},
+      func:()=>{
+        const host=document.getElementById('pipeline-graph-local-extension');
+        if(!host)return null;
+        return {
+          source:host.dataset.pgvxSource||'',
+          detail:host.dataset.pgvxSourceDetail||'',
+          note:host.dataset.pgvxSourceNote||''
+        };
+      }
+    });
+    return result?.[0]?.result||null;
+  }catch{return null;}
+}
+function showDebug(info){
+  const visible=!!(info&&info.source);
+  els.debug.hidden=!visible;
+  if(!visible){els.debug.open=false;els.debugSource.textContent='Unavailable';els.debugDetail.textContent='';els.debugNote.textContent='';return;}
+  els.debugSource.textContent=info.source;
+  els.debugDetail.textContent=info.detail||'';
+  els.debugDetail.hidden=!info.detail;
+  els.debugNote.textContent=info.note||'';
+  els.debugNote.hidden=!info.note;
+}
 async function loadState(){
   const tab=await activeTab();
   const url=tab?.url||'';
@@ -32,6 +63,7 @@ async function loadState(){
     els.origin.textContent='Open a Jenkins job or build page';
     els.mode.textContent='Unavailable';
     els.runOnce.disabled=true;els.always.disabled=true;els.disable.disabled=true;
+    showDebug(null);
     setMessage('This popup only activates on http(s) Jenkins /job/ pages.');
     return;
   }
@@ -42,6 +74,7 @@ async function loadState(){
   const granted=!!pattern&&await browser.permissions.contains({origins:[pattern]});
   if(listed&&!granted)await writeOrigins(origins.filter(item=>item!==origin));
   current={tab,url,origin,pattern,listed:listed&&granted,granted};
+  showDebug(await readPageDebug(tab.id));
   els.origin.textContent=origin;
   els.mode.textContent=current.listed?'Always on':'Run once';
   els.runOnce.disabled=false;

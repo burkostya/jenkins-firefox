@@ -30,6 +30,16 @@ test('activation UI does not hardcode a Jenkins hostname',()=>{
  assert.ok(!code.includes('jenkins.test'));
 });
 
+test('technical data source is exposed only through the popup debug section',()=>{
+ const popup=fs.readFileSync(path.join(root,'extension/popup.html'),'utf8');
+ const popupCode=fs.readFileSync(path.join(root,'extension/popup.js'),'utf8');
+ const content=fs.readFileSync(path.join(root,'extension/content.js'),'utf8');
+ assert.ok(popup.includes('<summary>Debug</summary>'));
+ assert.ok(popupCode.includes('data-pgvx-source')||popupCode.includes('pgvxSource'));
+ assert.ok(!content.includes('Source: Pipeline Steps HTML'));
+ assert.ok(!content.includes('Source: Jenkins execution tree'));
+});
+
 test('API reads use GET, current session, no cache and no redirects',async()=>{
  await withFetch(async(url,opts)=>{assert.equal(url,'https://jenkins.test/jenkins/job/x/wfapi/runs');assert.equal(opts.method,'GET');assert.equal(opts.credentials,'same-origin');assert.equal(opts.redirect,'error');assert.equal(opts.cache,'no-store');return new Response('[]',{headers:{'Content-Type':'application/json'}});},async()=>assert.deepEqual(await api.runs(),[]));
 });
