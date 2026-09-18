@@ -106,8 +106,8 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   const adapted=useMemo<Adapted>(()=>run?(tree?.runId===run.id?tree.data:adaptFlatRun(run,api.runPath(run))):{stages:[],meta:new Map(),warnings:[],source:'wfapi'},[run,tree,api]);
   const hasTopology=adapted.source!=='wfapi';
   const fromHtml=adapted.source==='flow-graph-table';
-  const sourceLabel=fromHtml?'Pipeline Steps HTML':hasTopology?'Jenkins execution tree':'wfapi / flat status list';
-  const sourceDetail=fromHtml
+  const sourceLabel=run?(fromHtml?'Pipeline Steps HTML':hasTopology?'Jenkins execution tree':'wfapi / flat status list'):'';
+  const sourceDetail=!run?'':fromHtml
     ?'Hierarchy comes from this build\'s flowGraphTable, matched to wfapi by node ID. Container states are display aggregates; ~ marks HTML-rounded block durations. No local grouping rules.'
     :hasTopology
       ?'Grouping, branches, durations and node states come from this build\'s /stages/tree response. No local grouping rules are used.'
