@@ -38,10 +38,16 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   const [loading,setLoading]=useState(true),[error,setError]=useState(''),[updated,setUpdated]=useState('');
   const [tree,setTree]=useState<{runId:string;data:Adapted}|null>(null),[treeNote,setTreeNote]=useState('');
   const [classic,setClassic]=useState(false);
-  const [theme,setTheme]=useState(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  const [theme,setTheme]=useState<'dark'|'light'>(()=>window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
   const [selectedId,setSelectedId]=useState<number|undefined>();
-  useEffect(()=>{let dead=false;readSetting(settingsKey+'/theme','').then(v=>{if(!dead&&(v==='dark'||v==='light'))setTheme(v);});return()=>{dead=true;};},[settingsKey]);
-  useEffect(()=>{host.dataset.theme=theme;},[theme]);
+  useEffect(()=>{
+    const media=window.matchMedia('(prefers-color-scheme: dark)');
+    const sync=()=>setTheme(media.matches?'dark':'light');
+    sync();
+    media.addEventListener('change',sync);
+    return()=>media.removeEventListener('change',sync);
+  },[]);
+  useEffect(()=>{host.dataset.theme=theme;},[host,theme]);
   useEffect(()=>{onClassic(classic);},[classic,onClassic]);
   useEffect(()=>{onOverview?.(!!overview&&!classic);},[overview,classic,onOverview]);
   useEffect(()=>{const fn=()=>{setClassic(false);host.scrollIntoView({behavior:'smooth',block:'start'});};host.addEventListener('pgvx-activate',fn);return()=>host.removeEventListener('pgvx-activate',fn);},[host]);
@@ -147,7 +153,6 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
     <header className="pgvx-header">
       <div className="pgvx-heading"><h2>{overview?overview.name:'Pipeline Graph'} <span className="pgvx-local">LOCAL</span></h2><div className="pgvx-subtitle">{location.label}</div></div>
       <div className="pgvx-actions">
-        <button title="Toggle light / dark theme" onClick={()=>{const next=theme==='light'?'dark':'light';setTheme(next);void writeSetting(settingsKey+'/theme',next);}}>{theme==='light'?'Dark':'Light'}</button>
         <button onClick={()=>setClassic(!classic)}>{classic?'Graph view':overview?'Original Jenkins page':classicLabel}</button>
         <button className="pgvx-icon-button" aria-label="Close local graph" title="Close local graph" onClick={onClose}>&#x2715;</button>
       </div>
