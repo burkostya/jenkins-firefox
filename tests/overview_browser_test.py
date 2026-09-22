@@ -123,14 +123,17 @@ with sync_playwright() as p:
             box=el.bounding_box();assert box['x']>=host['x']-1 and box['x']+box['width']<=host['x']+host['width']+1,(width,box,host)
     ok('overview sections stay within host at 1600, 1100, 800 and 600px')
     page.set_viewport_size({'width':1600,'height':1100})
-    page.get_by_role('button',name='Dark',exact=True).click()
+    expect(page.get_by_role('button',name='Dark',exact=True)).to_have_count(0)
+    expect(page.get_by_role('button',name='Light',exact=True)).to_have_count(0)
+    page.emulate_media(color_scheme='dark')
     expect(page.locator('#page-body')).to_have_attribute('data-pgvx-theme','dark')
     assert tests.evaluate("e=>getComputedStyle(e).backgroundColor")=='rgba(0, 0, 0, 0)'
     assert page.locator('.pgvx-app').evaluate("e=>getComputedStyle(e).backgroundColor")=='rgb(25, 33, 45)'
-    ok('dark theme keeps overview sections transparent over the shared extension surface')
+    ok('dark browser color scheme keeps overview sections transparent over the shared extension surface')
     page.wait_for_timeout(200)
     page.screenshot(path=str(OUT/'job-overview-dark.png'),full_page=True)
-    page.get_by_role('button',name='Light',exact=True).click()
+    page.emulate_media(color_scheme='light')
+    expect(page.locator('#page-body')).to_have_attribute('data-pgvx-theme','light')
     page.wait_for_timeout(200)
     page.screenshot(path=str(OUT/'job-overview-light.png'),full_page=True)
     # Jenkins inserts/replaces a trend after our first render.
