@@ -16,7 +16,10 @@ One selected build drives the graph, artifacts, test summary and status.
 The overview includes recent builds with a filter, a last-successful selector,
 artifact links and a small job-wide test history. Missing JUnit reports are not
 shown as zero failures. NOT_BUILT remains distinct and may still have artifacts.
-Light/dark styles and narrow layouts are supported.
+Light/dark styles and narrow layouts are supported. The injected UI follows
+Firefox's `prefers-color-scheme` live; there is no separate theme override in
+the extension. If Firefox is set to follow the system appearance, the extension
+follows that change as well.
 
 The fixed Remote API projection reads the latest 20 builds. Older selections
 are read explicitly. File sizes are not in that projection and are not invented.
