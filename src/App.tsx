@@ -12,6 +12,8 @@ import {adaptFlowGraphHtml} from './flow-table.ts';
 import {readSetting,writeSetting} from './storage.ts';
 import {JobOverview} from './JobOverview.tsx';
 import type {JobOverview as Job,BuildOverview} from './overview.ts';
+import {BuildHeader,BuildFacts} from './BuildOverview.tsx';
+import type {BuildPageLayout,NativeBuildInfo} from './build-page.ts';
 
 function errorText(e:unknown){return e instanceof Error?e.message:String(e);}
 function stageTime(s:StageInfo){return (s as any).pgvxDurationLabel??formatMs(s.totalDurationMillis);}
@@ -21,12 +23,12 @@ export class ErrorBoundary extends Component<any,{error:string}> {
   state={error:''};static getDerivedStateFromError(e:unknown){return {error:errorText(e)};}
   render(){return this.state.error?<section className="pgvx-error" role="alert"><b>Unable to render the local graph.</b><p>{this.state.error}</p><button onClick={this.props.onClose}>Restore Jenkins view</button></section>:this.props.children;}
 }
-interface Props {overviewEnabled?:boolean;onOverview?:(show:boolean)=>void;classicLabel?:string;location:JenkinsLocation;portal:HTMLElement;onClassic:(show:boolean)=>void;onClose:()=>void;host:HTMLElement;}
+interface Props {buildLayout?:BuildPageLayout|null;overviewEnabled?:boolean;onOverview?:(show:boolean)=>void;classicLabel?:string;location:JenkinsLocation;portal:HTMLElement;onClassic:(show:boolean)=>void;onClose:()=>void;host:HTMLElement;}
 export default function App(props:Props){
   const key='pgvx/v2/'+props.location.origin+props.location.jobPath;
   return <TooltipRoot.Provider value={props.portal}><UserPreferencesProvider storageKey={key+'/preferences'}><Main {...props} settingsKey={key}/></UserPreferencesProvider></TooltipRoot.Provider>;
 }
-function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnabled=false,onOverview,classicLabel='Original Stage View'}:Props&{settingsKey:string}){
+function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnabled=false,onOverview,buildLayout,classicLabel='Original Stage View'}:Props&{settingsKey:string}){
   const api=useMemo(()=>new JenkinsApi(location),[location]);
   const [runs,setRuns]=useState<WfRun[]>([]),[runData,setRun]=useState<WfRun|null>(null);
   const [overview,setOverview]=useState<Job|null>(null),[metadata,setMetadata]=useState<BuildOverview|null>(null),[overviewError,setOverviewError]=useState('');
@@ -34,7 +36,9 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   const [choice,setChoice]=useState(location.build||'latest'),[refresh,setRefresh]=useState(0),[auto,setAuto]=useState(true);
   const run=loadedChoice===choice?runData:null;
   const buildMeta=loadedChoice===choice?metadata:null;
-  const choose=(value:string)=>{setChoice(value);setSelectedId(undefined);};
+  const choose=(value:string)=>{if(buildLayout)return;setChoice(value);setSelectedId(undefined);};
+  const [nativeBuild,setNativeBuild]=useState<NativeBuildInfo>(()=>buildLayout?.read()||{revision:'',branch:'',causes:[],sizes:{},artifactLinks:{}});
+  useEffect(()=>buildLayout?.subscribe(()=>setNativeBuild(buildLayout.read())),[buildLayout]);
   const [loading,setLoading]=useState(true),[error,setError]=useState(''),[updated,setUpdated]=useState('');
   const [tree,setTree]=useState<{runId:string;data:Adapted}|null>(null),[treeNote,setTreeNote]=useState('');
   const [classic,setClassic]=useState(false);
@@ -50,6 +54,8 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   useEffect(()=>{host.dataset.theme=theme;},[host,theme]);
   useEffect(()=>{onClassic(classic);},[classic,onClassic]);
   useEffect(()=>{onOverview?.(!!overview&&!classic);},[overview,classic,onOverview]);
+  useEffect(()=>{buildLayout?.update(!classic&&!!buildMeta,buildMeta);},[buildLayout,classic,buildMeta]);
+  useEffect(()=>()=>buildLayout?.update(false,null),[buildLayout]);
   useEffect(()=>{const fn=()=>{setClassic(false);host.scrollIntoView({behavior:'smooth',block:'start'});};host.addEventListener('pgvx-activate',fn);return()=>host.removeEventListener('pgvx-activate',fn);},[host]);
   useEffect(()=>{
     if(classic)return;
@@ -60,7 +66,7 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
       if(document.hidden){timer=setTimeout(tick,5000);return;}
       try{
         const [runResult,overviewResult]=await Promise.allSettled([
-          api.runs(ctrl.signal),overviewEnabled?api.overview(ctrl.signal):Promise.resolve(null)
+          buildLayout?Promise.resolve([] as WfRun[]):api.runs(ctrl.signal),overviewEnabled?api.overview(ctrl.signal):Promise.resolve(null)
         ]);
         if(stopped)return;
         const job=overviewResult.status==='fulfilled'?overviewResult.value:null;
@@ -72,7 +78,7 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
           try{current=list.find(r=>r.id===wanted)??await api.describe(wanted,ctrl.signal);}
           catch(e){if(ctrl.signal.aborted)throw e;graphError='Graph unavailable for this build: '+errorText(e);}
           const number=Number(current?.id||wanted);
-          if(overviewEnabled&&Number.isSafeInteger(number)&&number>0){
+          if((overviewEnabled||buildLayout)&&Number.isSafeInteger(number)&&number>0){
             try{selectedMeta=job?.builds.find(b=>b.number===number)??await api.buildOverview(number,ctrl.signal);}
             catch(e){if(ctrl.signal.aborted)throw e;metaError=metaError||'Selected build metadata unavailable: '+errorText(e);}
           }
@@ -100,14 +106,14 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
         setOverviewError(metaError);setLoadedChoice(choice);setError(graphError);
         setTree(result&&current?{runId:current.id,data:result}:null);setTreeNote(note);
         setUpdated(new Date().toLocaleTimeString());
-        if(auto&&(choice==='latest'||selectedMeta?.building||current&&(isActive(current.status)||result?.complete===false)))
+        if(auto&&(choice==='latest'||(buildLayout&&!selectedMeta)||selectedMeta?.building||current&&(isActive(current.status)||result?.complete===false)))
           timer=setTimeout(tick,current&&(isActive(current.status)||result?.complete===false)?(result?.source==='flow-graph-table'?15000:5000):15000);
       }catch(e){if(!stopped&&!ctrl.signal.aborted)setError(errorText(e));}
       finally{if(!stopped)setLoading(false);}
     }
     void tick();
     return()=>{stopped=true;ctrl.abort();if(timer)clearTimeout(timer);};
-  },[api,choice,refresh,auto,classic,settingsKey,overviewEnabled]);
+  },[api,choice,refresh,auto,classic,settingsKey,overviewEnabled,buildLayout]);
   useEffect(()=>{setSelectedId(undefined);},[run?.id]);
   const adapted=useMemo<Adapted>(()=>run?(tree?.runId===run.id?tree.data:adaptFlatRun(run,api.runPath(run))):{stages:[],meta:new Map(),warnings:[],source:'wfapi'},[run,tree,api]);
   const hasTopology=adapted.source!=='wfapi';
@@ -149,16 +155,17 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
   for(const b of overview?.builds||[])options.set(String(b.number),{id:String(b.number),name:'#'+b.number,status:b.result});
   if(buildMeta)options.set(String(buildMeta.number),{id:String(buildMeta.number),name:'#'+buildMeta.number,status:buildMeta.result});
   const buildOptions=[...options.values()].sort((a,b)=>Number(b.id)-Number(a.id));
-  return <div className="pgvx-app" data-theme={theme}>
-    <header className="pgvx-header">
+  return <div className={"pgvx-app"+(buildLayout?" pgvx-build-page":"")} data-theme={theme}>
+    {buildLayout&&!classic?<BuildHeader number={location.build!} build={buildMeta} native={nativeBuild} startedAt={run?.startTimeMillis||buildMeta?.timestamp||0}
+      auto={auto} loading={loading} onAuto={setAuto} onRefresh={()=>setRefresh(x=>x+1)} onClassic={()=>setClassic(true)} onClose={onClose}/>:<header className="pgvx-header">
       <div className="pgvx-heading"><h2>{overview?overview.name:'Pipeline Graph'} <span className="pgvx-local">LOCAL</span></h2><div className="pgvx-subtitle">{location.label}</div></div>
       <div className="pgvx-actions">
-        <button onClick={()=>setClassic(!classic)}>{classic?'Graph view':overview?'Original Jenkins page':classicLabel}</button>
+        <button onClick={()=>setClassic(!classic)}>{classic?'Graph view':overview||buildLayout?'Original Jenkins page':classicLabel}</button>
         <button className="pgvx-icon-button" aria-label="Close local graph" title="Close local graph" onClick={onClose}>&#x2715;</button>
       </div>
-    </header>
+    </header>}
     {!classic&&<>
-      <div className="pgvx-runbar">
+      {!buildLayout&&<div className="pgvx-runbar">
         <label className="pgvx-run-select">Build <select value={choice} onChange={e=>choose(e.target.value)}>
           <option value="latest">Latest build</option>
           {buildOptions.map(r=><option key={r.id} value={r.id}>{r.name||'#'+r.id} - {r.status}</option>)}
@@ -167,7 +174,9 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
         </select></label>
         {buildMeta?<div className="pgvx-run-summary"><StatusIcon status={status(buildMeta.result)}/><b>#{buildMeta.number}</b><span>{buildMeta.result}</span><span className="pgvx-divider"/><span>{formatMs(buildMeta.duration)}</span><span className="pgvx-muted">{safeDate(buildMeta.timestamp)}</span></div>:run&&<div className="pgvx-run-summary"><StatusIcon status={status(run.status)}/><b>{run.name||'#'+run.id}</b><span>{run.status}</span><span className="pgvx-divider"/><span>{formatMs(run.durationMillis)}</span><span className="pgvx-muted">{safeDate(run.startTimeMillis)}</span></div>}
         <div className="pgvx-run-actions"><label><input type="checkbox" checked={auto} onChange={e=>setAuto(e.target.checked)}/> Auto-refresh</label><button disabled={loading} onClick={()=>setRefresh(x=>x+1)}>{loading?'Loading...':'Refresh'}</button>{(buildMeta||run)&&<a href={(buildMeta?.url||location.origin+api.runPath(run!))+'console'} target="_blank" rel="noopener noreferrer">Console &#x2197;</a>}</div>
-      </div>
+      </div>}
+      {buildLayout&&buildMeta&&<><BuildFacts build={buildMeta} native={nativeBuild}/><div className="pgvx-build-warnings"><slot name="build-warnings"/></div></>}
+      {buildLayout&&overviewError&&<div className="pgvx-warning" role="status">{overviewError}. Original build information remains available.</div>}
       {overviewEnabled&&overview&&<JobOverview job={overview} build={buildMeta} selected={String(buildMeta?.number||run?.id||(choice==='latest'?overview.lastBuild:choice)||'')} onSelect={choose} error={overviewError} loading={loading||loadedChoice!==choice}/>}
       {overviewEnabled&&!overview&&overviewError&&<div className="pgvx-warning" role="status">{overviewError}. Native overview widgets remain available.</div>}
       {loading&&!run&&<div className="pgvx-empty" role="status">Loading selected build...</div>}
@@ -177,7 +186,7 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
         {adapted.warnings.map(w=><div className="pgvx-warning" key={w}>{w}</div>)}
         {adapted.stages.length===0&&<div className="pgvx-empty">No stages reported yet. The build may be queued or still starting.</div>}
         {hasTopology&&collapseReady&&adapted.stages.length>0&&<GraphViewport
-          stages={effective} original={adapted.stages} selected={selected} collapsed={collapsed}
+          title={buildLayout?'Pipeline':'Stages'} stages={effective} original={adapted.stages} selected={selected} collapsed={collapsed}
           onToggle={toggle} onSelect={select} runPath={api.runPath(run)}
           onToggleAll={()=>changeCollapsed(collapsed.size?new Set():parents)} hasParents={parents.size>0}
         />}
@@ -206,6 +215,7 @@ function Main({location,portal,onClassic,onClose,host,settingsKey,overviewEnable
           </section>
         </div>}
       </>}
+      {buildLayout&&buildMeta&&<details className="pgvx-build-native-details"><summary>Build details</summary><slot name="build-details"/></details>}
       <footer className="pgvx-footer"><span>Renderer: Pipeline Graph View 1013.v9f83fd83c063</span><span>Read-only / local settings / no external services</span></footer>
     </>}
   </div>;
@@ -218,7 +228,7 @@ function StageTree({stages,adapted,collapsed,selected,onToggle,onSelect,depth=0}
     </div>{s.children.length>0&&!collapsed.has(s.id)&&<StageTree {...{stages:s.children,adapted,collapsed,selected,onToggle,onSelect,depth:depth+1}}/>}</div>;
   })}</div>;
 }
-function GraphViewport({stages,original,selected,collapsed,onToggle,onSelect,runPath,onToggleAll,hasParents}:any){
+function GraphViewport({stages,original,selected,collapsed,onToggle,onSelect,runPath,onToggleAll,hasParents,title='Stages'}:any){
   const view=useRef<HTMLDivElement>(null),content=useRef<HTMLDivElement>(null),drag=useRef<any>(null);
   const [size,setSize]=useState({w:900,h:230}),[scale,setScale]=useState(1),[fit,setFit]=useState(true),[full,setFull]=useState(false);
   useEffect(()=>{
@@ -232,7 +242,7 @@ function GraphViewport({stages,original,selected,collapsed,onToggle,onSelect,run
   useEffect(()=>{if(!full)return;const fn=(e:KeyboardEvent)=>{if(e.key==='Escape')setFull(false);};document.addEventListener('keydown',fn);return()=>document.removeEventListener('keydown',fn);},[full]);
   const changeScale=(factor:number)=>{setFit(false);setScale(s=>Math.max(.25,Math.min(2.5,s*factor)));};
   return <div className={'pgvx-graph-card'+(full?' is-fullscreen':'')}>
-    <div className="pgvx-graph-title">Stages</div>
+    <div className="pgvx-graph-title">{title}</div>
     <button className="pgvx-fullscreen pgvx-icon-button" title={full?'Close expanded view':'Expand view'} aria-label={full?'Close expanded view':'Expand view'} onClick={()=>{setFull(!full);setFit(true);}}>{full?'\u2715':'\u26f6'}</button>
     <div className="pgvx-viewport" ref={view} style={full?{}:{height:Math.max(220,Math.min(550,size.h*scale+64))}}
       onPointerDown={e=>{if(e.button!==0||(e.target as Element).closest('a,button,[role="button"]'))return;const el=view.current!;drag.current={x:e.clientX,y:e.clientY,l:el.scrollLeft,t:el.scrollTop};el.setPointerCapture(e.pointerId);}}

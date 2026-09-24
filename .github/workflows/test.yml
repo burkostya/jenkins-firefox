@@ -38,6 +38,7 @@ jobs:
           npm run test:browser
           npm run test:flow-browser
           npm run test:overview-browser
+          python tests/build_page_browser_test.py
       - name: Package unsigned Firefox extension
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
