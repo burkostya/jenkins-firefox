@@ -41,6 +41,8 @@ export function createBuildPageLayout(panel:HTMLElement,host:HTMLElement,locatio
     #page-body[data-pgvx-build] #main-panel {min-width:0;padding-left:0}
     #page-body[data-pgvx-build] .pgvx-native-build {font:13px/1.5 system-ui,sans-serif;color:inherit;overflow-wrap:anywhere}
     #page-body[data-pgvx-build="dark"] .pgvx-native-build {color:#dce4ef}
+    #page-body[data-pgvx-build] .pgvx-native-build a {color:var(--accent,#066caa)}
+    #page-body[data-pgvx-build] .pgvx-native-build a:focus-visible {outline:2px solid var(--accent,#066caa);outline-offset:2px}
     #page-body[data-pgvx-build] .pgvx-native-build table {border-collapse:collapse;width:auto;margin:0}
     #page-body[data-pgvx-build] .pgvx-native-build .app-summary>td {padding:4px 8px 4px 0;vertical-align:top}
     #page-body[data-pgvx-build] .pgvx-native-build .app-summary>td:first-child {width:24px}

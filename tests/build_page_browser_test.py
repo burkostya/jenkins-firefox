@@ -127,6 +127,8 @@ def integration_tests(browser):
     page.screenshot(path=str(OUT/'build-page-light.png'),full_page=True)
     page.emulate_media(color_scheme='dark')
     page.wait_for_function('document.getElementById("page-body").dataset.pgvxBuild==="dark"')
+    check('native links follow dark theme',page.evaluate('getComputedStyle(document.querySelector("[slot=build-description] a")).color===getComputedStyle(document.getElementById("pipeline-graph-local-extension").shadowRoot.querySelector(".pgvx-build-toolbar a")).color'))
+    page.wait_for_timeout(200)  # Let the existing 120 ms button transition settle.
     page.screenshot(path=str(OUT/'build-page-dark.png'),full_page=True)
     page.locator('.pgvx-build-options summary').click()
     page.get_by_role('button',name='Original Jenkins page',exact=True).click()
