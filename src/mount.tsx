@@ -5,7 +5,9 @@ import shell from './shell.css';
 import upstream from './upstream.css';
 import overviewStyles from './overview.css';
 import spacingStyles from './spacing.css';
+import buildStyles from './build-overview.css';
 import {createJobPageLayout} from './page-layout.ts';
+import {createBuildPageLayout,isBuildRoot} from './build-page.ts';
 const ID='pipeline-graph-local-extension';
 export function mount(location:JenkinsLocation = parseLocation(window.location.href)){
   const old=document.getElementById(ID);
@@ -24,7 +26,7 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   while(anchor && anchor.parentElement!==panel)anchor=anchor.parentElement;
   if(anchor && anchor!==panel)anchor.before(host);else panel.append(host);
   const shadow=host.attachShadow({mode:'open'});
-  const css=shell+'\n'+upstream+'\n'+overviewStyles+'\n'+spacingStyles;
+  const css=shell+'\n'+upstream+'\n'+overviewStyles+'\n'+spacingStyles+'\n'+buildStyles;
   try { const sheet=new CSSStyleSheet();sheet.replaceSync(css);shadow.adoptedStyleSheets=[sheet]; }
   catch { const style=document.createElement('style');style.textContent=css;shadow.append(style); }
   const target=document.createElement('div'),portal=document.createElement('div');shadow.append(target,portal);
@@ -32,10 +34,11 @@ export function mount(location:JenkinsLocation = parseLocation(window.location.h
   function showClassic(show:boolean){if(!original)return;if(show){if(oldDisplay)original.style.setProperty('display',oldDisplay,oldPriority);else original.style.removeProperty('display');}else original.style.setProperty('display','none','important');}
   const overviewEnabled=!!location.isJobPage && document.body.dataset.modelType==='org.jenkinsci.plugins.workflow.job.WorkflowJob';
   const layout=overviewEnabled?createJobPageLayout(panel as HTMLElement,host,original):null;
+  const buildLayout=isBuildRoot(location,window.location.href,document.body.dataset.modelType)?createBuildPageLayout(panel as HTMLElement,host,location):null;
   const onOverview=(enabled:boolean)=>layout?.setEnabled(enabled);
   let closed=false;const root=createRoot(target);
-  function close(){if(closed)return;closed=true;host.removeEventListener('pgvx-deactivate',close);layout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
+  function close(){if(closed)return;closed=true;host.removeEventListener('pgvx-deactivate',close);layout?.dispose();buildLayout?.dispose();showClassic(true);root.unmount();host.remove();window.removeEventListener('pagehide',close);}
   host.addEventListener('pgvx-deactivate',close);
   window.addEventListener('pagehide',close,{once:true});
-  root.render(<ErrorBoundary onClose={close}><App overviewEnabled={overviewEnabled} onOverview={onOverview} classicLabel={original?.id==='nodeGraph'?'Original Pipeline Steps':'Original Stage View'} {...{location,portal,host}} onClassic={showClassic} onClose={close}/></ErrorBoundary>);
+  root.render(<ErrorBoundary onClose={close}><App buildLayout={buildLayout} overviewEnabled={overviewEnabled} onOverview={onOverview} classicLabel={original?.id==='nodeGraph'?'Original Pipeline Steps':'Original Stage View'} {...{location,portal,host}} onClassic={showClassic} onClose={close}/></ErrorBoundary>);
 }
