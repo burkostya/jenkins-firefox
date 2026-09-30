@@ -1,6 +1,6 @@
 # Pipeline Graph Local for Jenkins / Firefox
 
-Version **0.8.1**. A read-only Firefox extension using the graph renderer and
+Version **0.9.0**. A read-only Firefox extension using the graph renderer and
 nested layout from **Pipeline Graph View 1013.v9f83fd83c063**. No controller
 upgrade, additional Jenkins plugin, Replay permission or API token is required
 for the supported Pipeline Steps HTML format.
@@ -25,6 +25,20 @@ The fixed Remote API projection reads the latest 20 builds. Older selections
 are read explicitly. File sizes are not in that projection and are not invented.
 Only validated JUnit TestResultAction counters are used. See
 [overview design, privacy and test notes](docs/job-overview.md).
+
+## Build overview
+
+On a numeric WorkflowRun root page, the extension replaces the large native
+summary with a compact overview bound to that build URL. It keeps the original
+Jenkins description, Stop control and visible warnings as the same DOM nodes,
+shows artifact and validated JUnit summaries when available, and moves lower
+priority native metadata under **Build details**. **Original Jenkins page** and
+**Close** restore the native page exactly.
+
+There is no in-place build selector on this view: navigating to another build
+uses that build's URL, so status, artifacts, tests, graph and logs cannot drift
+between different build numbers. Unknown plugin widgets remain native rather
+than being guessed or hidden.
 
 ## Install or update
 
@@ -84,7 +98,8 @@ traversed but not displayed as invented stages. The HTML adapter is our browser
 adapter, not a port of the plugin's Java scanner. Its container statuses are
 labelled derived, and rounded HTML block durations are labelled approximate.
 Native server-tree data has priority. Details and textual step logs still use
-wfapi. Build and Pipeline Steps pages retain the existing graph-only UI.
+wfapi. Pipeline Steps pages retain the graph-only UI; numeric build root pages
+use the compact build overview described above.
 
 ## Access and safety
 
